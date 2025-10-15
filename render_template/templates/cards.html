@@ -1,0 +1,1249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ZestPay Cards - Premium Financial Services</title>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+<style>
+  * { box-sizing:border-box; margin:0; padding:0; font-family:'Segoe UI', sans-serif; }
+
+  body {
+    background: linear-gradient(135deg, #0a0a0a, #1a1a1a);
+    color: #fff;
+    min-height: 100vh;
+  }
+
+  /* Hero Section */
+  .hero {
+    padding: 40px 20px;
+    text-align: center;
+    background: linear-gradient(180deg, rgba(212,175,55,0.05) 0%, transparent 100%);
+  }
+  .hero h1 {
+    font-size: clamp(24px, 5vw, 36px);
+    font-weight: 700;
+    color: #d4af37;
+    margin-bottom: 12px;
+    animation: fadeInDown 0.8s ease-out;
+  }
+  .hero p {
+    color: rgba(255,255,255,0.8);
+    font-size: clamp(14px, 3vw, 18px);
+    max-width: 600px;
+    margin: 0 auto;
+    animation: fadeInUp 0.8s ease-out;
+  }
+
+  @keyframes fadeInDown {
+    from { opacity:0; transform: translateY(-20px); }
+    to { opacity:1; transform: translateY(0); }
+  }
+  @keyframes fadeInUp {
+    from { opacity:0; transform: translateY(20px); }
+    to { opacity:1; transform: translateY(0); }
+  }
+
+  /* Cards Showcase - Stacked Layout */
+  .cards-showcase {
+    padding: 40px 20px;
+    max-width: 500px;
+    margin: 0 auto;
+  }
+  .cards-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    margin-bottom: 60px;
+  }
+
+  .card-wrapper {
+    position: relative;
+    height: 240px;
+    perspective: 1000px;
+  }
+
+  .card {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    transition: transform 0.6s, box-shadow 0.3s;
+    transform-style: preserve-3d;
+    cursor: pointer;
+  }
+
+  .card:hover {
+    transform: translateY(-10px) rotateX(5deg);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.7);
+  }
+
+  .card-front {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 16px;
+    backface-visibility: hidden;
+    padding: 25px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .virtual-card .card-front {
+    background: linear-gradient(135deg, #1a2a6c, #2a4a8c);
+    border: 1px solid rgba(255,255,255,0.1);
+  }
+
+  .physical-card .card-front {
+    background: linear-gradient(135deg, #2a2a2a, #4a4a4a);
+    border: 1px solid rgba(255,255,255,0.1);
+  }
+
+  .card-chip {
+    width: 50px;
+    height: 40px;
+    background: linear-gradient(135deg, #d4af37, #f1c40f);
+    border-radius: 8px;
+    position: relative;
+  }
+
+  .card-chip::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 35px;
+    height: 25px;
+    background: #1a1a1a;
+    border-radius: 4px;
+  }
+
+  .card-number {
+    font-size: 22px;
+    letter-spacing: 2px;
+    font-weight: 500;
+    margin: 10px 0;
+    font-family: 'Courier New', monospace;
+  }
+
+  .card-details {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+  }
+
+  .card-holder {
+    text-transform: uppercase;
+    font-size: 14px;
+    letter-spacing: 1px;
+  }
+
+  .card-expiry {
+    font-size: 14px;
+    letter-spacing: 1px;
+  }
+
+  .card-logo {
+    position: absolute;
+    top: 25px;
+    right: 25px;
+    font-size: 24px;
+    font-weight: 700;
+    color: #d4af37;
+  }
+
+  .card-type {
+    position: absolute;
+    bottom: 25px;
+    right: 25px;
+    font-size: 20px;
+    color: rgba(255,255,255,0.8);
+  }
+
+  .card-info {
+    text-align: center;
+    margin-top: 20px;
+  }
+
+  .card-title {
+    font-size: 22px;
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: #fff;
+  }
+
+  .card-features {
+    list-style: none;
+    padding: 0;
+    margin: 15px 0;
+    font-size: 15px;
+    color: rgba(255,255,255,0.8);
+  }
+
+  .card-features li {
+    margin: 8px 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .card-features i {
+    color: #d4af37;
+  }
+
+  .coming-soon {
+    display: inline-block;
+    padding: 10px 24px;
+    background: rgba(212,175,55,0.1);
+    border: 1px solid rgba(212,175,55,0.3);
+    color: #d4af37;
+    font-weight: 600;
+    border-radius: 30px;
+    font-size: 14px;
+    margin-top: 15px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .coming-soon::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    animation: shine 3s infinite;
+  }
+
+  @keyframes shine {
+    0% { left: -100%; }
+    20% { left: 100%; }
+    100% { left: 100%; }
+  }
+
+  /* Stacked Card Effect */
+  .stacked-container {
+    position: relative;
+    margin-bottom: 80px;
+  }
+  
+  .stacked-container::before,
+  .stacked-container::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 16px;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.05);
+    z-index: -1;
+  }
+  
+  .stacked-container::before {
+    top: 10px;
+    left: 10px;
+  }
+  
+  .stacked-container::after {
+    top: 20px;
+    left: 20px;
+  }
+
+  /* About Section */
+  .about-section {
+    padding: 60px 20px;
+    background: rgba(0,0,0,0.3);
+  }
+  .section-container {
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+  .section-title {
+    font-size: clamp(24px, 4vw, 32px);
+    text-align: center;
+    margin-bottom: 40px;
+    color: #d4af37;
+    position: relative;
+  }
+  .section-title::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 3px;
+    background: #d4af37;
+  }
+  .about-content {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    margin-top: 40px;
+  }
+  .about-card {
+    background: rgba(255,255,255,0.05);
+    border-radius: 12px;
+    padding: 25px;
+    border: 1px solid rgba(255,255,255,0.1);
+    transition: transform 0.3s, box-shadow 0.3s;
+  }
+  .about-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(212,175,55,0.1);
+  }
+  .about-card h3 {
+    color: #d4af37;
+    margin-bottom: 15px;
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .about-card p {
+    color: rgba(255,255,255,0.8);
+    line-height: 1.6;
+    font-size: 15px;
+  }
+
+  /* Services Section */
+  .services-section {
+    padding: 60px 20px;
+  }
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 25px;
+    margin-top: 40px;
+  }
+  .service-item {
+    text-align: center;
+    padding: 30px 20px;
+    background: rgba(212,175,55,0.05);
+    border-radius: 12px;
+    border: 1px solid rgba(212,175,55,0.2);
+    transition: all 0.3s;
+  }
+  .service-item:hover {
+    background: rgba(212,175,55,0.1);
+    transform: translateY(-5px);
+  }
+  .service-icon {
+    font-size: 48px;
+    color: #d4af37;
+    margin-bottom: 20px;
+  }
+  .service-item h3 {
+    font-size: 18px;
+    margin-bottom: 10px;
+    color: #fff;
+  }
+  .service-item p {
+    color: rgba(255,255,255,0.7);
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  /* Features Section */
+  .features-section {
+    padding: 60px 20px;
+    background: rgba(0,0,0,0.3);
+  }
+  .features-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+    margin-top: 40px;
+  }
+  .feature-item {
+    display: flex;
+    gap: 15px;
+    padding: 20px;
+    background: rgba(255,255,255,0.03);
+    border-radius: 10px;
+    border-left: 3px solid #d4af37;
+  }
+  .feature-icon {
+    font-size: 24px;
+    color: #d4af37;
+    flex-shrink: 0;
+  }
+  .feature-text h4 {
+    color: #fff;
+    margin-bottom: 5px;
+    font-size: 16px;
+  }
+  .feature-text p {
+    color: rgba(255,255,255,0.7);
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  /* FAQ Section */
+  .faq-section {
+    padding: 60px 20px;
+  }
+  .faq-container {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  .faq-item {
+    margin-bottom: 15px;
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .faq-question {
+    padding: 20px;
+    background: rgba(255,255,255,0.05);
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: background 0.3s;
+  }
+  .faq-question:hover {
+    background: rgba(255,255,255,0.08);
+  }
+  .faq-question h3 {
+    font-size: 16px;
+    color: #fff;
+  }
+  .faq-icon {
+    color: #d4af37;
+    transition: transform 0.3s;
+  }
+  .faq-item.active .faq-icon {
+    transform: rotate(180deg);
+  }
+  .faq-answer {
+    padding: 0 20px;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s, padding 0.3s;
+  }
+  .faq-item.active .faq-answer {
+    padding: 20px;
+    max-height: 500px;
+  }
+  .faq-answer p {
+    color: rgba(255,255,255,0.7);
+    line-height: 1.6;
+    font-size: 14px;
+  }
+
+  /* Bottom Nav */
+  .bottom-nav {
+    display:flex;
+    justify-content:space-around;
+    padding:12px 0;
+    background:#111;
+    border-top:1px solid rgba(255,255,255,0.2);
+    position: sticky;
+    bottom: 0;
+    z-index: 100;
+  }
+  .bottom-nav a {
+    text-decoration:none;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    color: rgba(255,255,255,0.6);
+    font-size:14px;
+    transition:0.3s;
+  }
+  .bottom-nav a.active { color:#d4af37; font-weight:600; }
+  .bottom-nav i { font-size:20px; margin-bottom:4px; }
+
+  /* Chat Button */
+  .chat-button {
+    position: fixed;
+    bottom: 80px;
+    right: 20px;
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, #d4af37, #b8860b);
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #000;
+    font-size: 24px;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(212,175,55,0.4);
+    z-index: 1000;
+    transition: all 0.3s ease;
+  }
+  .chat-button:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 16px rgba(212,175,55,0.6);
+  }
+  .chat-button.active {
+    transform: scale(0.9);
+    background: linear-gradient(135deg, #ff4d4d, #cc0000);
+  }
+
+  /* Chat Container */
+  .chat-container {
+    position: fixed;
+    bottom: 150px;
+    right: 20px;
+    width: 350px;
+    height: 500px;
+    background: #1a1a1a;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    display: flex;
+    flex-direction: column;
+    z-index: 999;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(20px);
+    transition: all 0.3s ease;
+    border: 1px solid rgba(255,255,255,0.1);
+  }
+  .chat-container.active {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+
+  /* Chat Header */
+  .chat-header {
+    background: linear-gradient(135deg, #d4af37, #b8860b);
+    color: #000;
+    padding: 15px 20px;
+    border-radius: 16px 16px 0 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .chat-header h3 {
+    font-size: 18px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .chat-status {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 12px;
+  }
+  .status-dot {
+    width: 8px;
+    height: 8px;
+    background: #b8860b;
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
+  }
+  .close-chat {
+    background: none;
+    border: none;
+    color: #000;
+    font-size: 18px;
+    cursor: pointer;
+  }
+
+  /* Chat Messages */
+  .chat-messages {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+  .message {
+    max-width: 80%;
+    padding: 12px 16px;
+    border-radius: 18px;
+    font-size: 14px;
+    line-height: 1.4;
+    animation: fadeIn 0.3s ease;
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .message.bot {
+    background: rgba(212,175,55,0.1);
+    border: 1px solid rgba(212,175,55,0.2);
+    align-self: flex-start;
+    border-bottom-left-radius: 4px;
+  }
+  .message.user {
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.2);
+    align-self: flex-end;
+    border-bottom-right-radius: 4px;
+  }
+  .message-time {
+    font-size: 11px;
+    color: rgba(255,255,255,0.5);
+    margin-top: 5px;
+    text-align: right;
+  }
+
+  /* Typing Indicator */
+  .typing-indicator {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 12px 16px;
+    background: rgba(212,175,55,0.1);
+    border: 1px solid rgba(212,175,55,0.2);
+    border-radius: 18px;
+    border-bottom-left-radius: 4px;
+    align-self: flex-start;
+    max-width: 80px;
+  }
+  .typing-dot {
+    width: 8px;
+    height: 8px;
+    background: #d4af37;
+    border-radius: 50%;
+    animation: typing 1.4s infinite;
+  }
+  .typing-dot:nth-child(2) {
+    animation-delay: 0.2s;
+  }
+  .typing-dot:nth-child(3) {
+    animation-delay: 0.4s;
+  }
+  @keyframes typing {
+    0%, 60%, 100% { transform: translateY(0); }
+    30% { transform: translateY(-10px); }
+  }
+
+  /* Chat Input */
+  .chat-input-container {
+    padding: 15px;
+    border-top: 1px solid rgba(255,255,255,0.1);
+    display: flex;
+    gap: 10px;
+  }
+  .chat-input {
+    flex: 1;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 24px;
+    padding: 10px 15px;
+    color: #fff;
+    font-size: 14px;
+    outline: none;
+  }
+  .chat-input:focus {
+    border-color: #d4af37;
+  }
+  .send-button {
+    background: linear-gradient(135deg, #d4af37, #b8860b);
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #000;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  .send-button:hover {
+    transform: scale(1.1);
+  }
+  .send-button:active {
+    transform: scale(0.95);
+  }
+
+  /* Responsive */
+  @media(max-width:768px){
+    .cards-showcase {
+      max-width: 100%;
+      padding: 20px 15px;
+    }
+    .card-wrapper {
+      height: 200px;
+    }
+    .card-number {
+      font-size: 18px;
+    }
+    .about-content,
+    .services-grid,
+    .features-list {
+      grid-template-columns: 1fr;
+    }
+    .hero {
+      padding: 30px 15px;
+    }
+    .about-section,
+    .services-section,
+    .features-section,
+    .faq-section {
+      padding: 40px 15px;
+    }
+    .chat-container {
+      width: calc(100% - 40px);
+      right: 20px;
+      left: 20px;
+      height: 70vh;
+      bottom: 80px;
+    }
+  }
+</style>
+</head>
+<body>
+
+  <!-- Hero Section -->
+  <div class="hero">
+    <h1>ZESTPAY PREMIUM CARDS</h1>
+    <p>Experience the future of digital banking with our innovative card solutions designed for your lifestyle</p>
+  </div>
+
+  <!-- Cards Showcase - Stacked Layout -->
+  <div class="cards-showcase">
+    <div class="cards-stack">
+      <!-- Virtual Card -->
+      <div class="stacked-container">
+        <div class="card-wrapper">
+          <div class="card virtual-card">
+            <div class="card-front">
+              <div class="card-logo">ZESTPAY</div>
+              <div class="card-chip"></div>
+              <div class="card-number">•••• •••• •••• 4242</div>
+              <div class="card-details">
+                <div>
+                  <div class="card-holder">YOUR NAME</div>
+                  <div class="card-expiry">12/25</div>
+                </div>
+                <div class="card-type">
+                  <i class="fa-brands fa-cc-visa"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card-info">
+          <h2 class="card-title">VIRTUAL ZESTPAY CARD</h2>
+          <ul class="card-features">
+            <li><i class="fa-solid fa-globe"></i> Shop online globally</li>
+            <li><i class="fa-solid fa-coins"></i> Spend in multiple currencies</li>
+            <li><i class="fa-solid fa-bolt"></i> Instant issuance, no waiting</li>
+          </ul>
+          <div class="coming-soon">Coming Soon</div>
+        </div>
+      </div>
+
+      <!-- Physical Card -->
+      <div class="stacked-container">
+        <div class="card-wrapper">
+          <div class="card physical-card">
+            <div class="card-front">
+              <div class="card-logo">ZESTPAY</div>
+              <div class="card-chip"></div>
+              <div class="card-number">•••• •••• •••• 8765</div>
+              <div class="card-details">
+                <div>
+                  <div class="card-holder">YOUR NAME</div>
+                  <div class="card-expiry">09/26</div>
+                </div>
+                <div class="card-type">
+                  <i class="fa-brands fa-cc-mastercard"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card-info">
+          <h2 class="card-title">PHYSICAL ZESTPAY CARD</h2>
+          <ul class="card-features">
+            <li><i class="fa-solid fa-store"></i> Use anywhere, anytime</li>
+            <li><i class="fa-solid fa-credit-card"></i> Swipe & tap for payments globally</li>
+            <li><i class="fa-solid fa-truck"></i> Delivered to your doorstep</li>
+          </ul>
+          <div class="coming-soon">Coming Soon</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- About Section -->
+  <div class="about-section">
+    <div class="section-container">
+      <h2 class="section-title">ABOUT ZESTPAY</h2>
+      <div class="about-content">
+        <div class="about-card">
+          <h3><i class="fa-solid fa-rocket"></i> OUR MISSION</h3>
+          <p>ZestPay is revolutionizing digital finance in Africa by providing seamless, secure, and innovative financial solutions. We're committed to making financial services accessible to everyone, everywhere, anytime.</p>
+        </div>
+        <div class="about-card">
+          <h3><i class="fa-solid fa-shield-halved"></i> SECURITY FIRST</h3>
+          <p>Your security is our top priority. We use bank-level encryption, multi-factor authentication, and advanced fraud detection systems to keep your money and data safe at all times.</p>
+        </div>
+        <div class="about-card">
+          <h3><i class="fa-solid fa-users"></i> TRUSTED BY THOUSANDS</h3>
+          <p>Join over 50,000 satisfied users who trust ZestPay for their daily financial needs. Our platform processes millions in transactions monthly with 99.9% uptime.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Services Section -->
+  <div class="services-section">
+    <div class="section-container">
+      <h2 class="section-title">OUR SERVICES</h2>
+      <div class="services-grid">
+        <div class="service-item">
+          <div class="service-icon"><i class="fa-solid fa-exchange-alt"></i></div>
+          <h3>Instant Exchange</h3>
+          <p>Swap cryptocurrencies and fiat currencies instantly at competitive rates with no hidden fees</p>
+        </div>
+        <div class="service-item">
+          <div class="service-icon"><i class="fa-solid fa-wallet"></i></div>
+          <h3>Digital Wallet</h3>
+          <p>Store multiple currencies in one secure wallet with instant access to your funds 24/7</p>
+        </div>
+        <div class="service-item">
+          <div class="service-icon"><i class="fa-solid fa-paper-plane"></i></div>
+          <h3>Quick Transfers</h3>
+          <p>Send money locally and internationally with speed and ease at the best exchange rates</p>
+        </div>
+        <div class="service-item">
+          <div class="service-icon"><i class="fa-solid fa-chart-line"></i></div>
+          <h3>Investment Options</h3>
+          <p>Grow your wealth with our investment products including crypto staking and savings plans</p>
+        </div>
+        <div class="service-item">
+          <div class="service-icon"><i class="fa-solid fa-mobile-alt"></i></div>
+          <h3>Mobile Banking</h3>
+          <p>Manage your finances on the go with our feature-rich mobile app available on iOS and Android</p>
+        </div>
+        <div class="service-item">
+          <div class="service-icon"><i class="fa-solid fa-headset"></i></div>
+          <h3>24/7 Support</h3>
+          <p>Get help whenever you need it with our round-the-clock customer support via chat, email, and phone</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Features Section -->
+  <div class="features-section">
+    <div class="section-container">
+      <h2 class="section-title">WHY CHOOSE ZESTPAY?</h2>
+      <div class="features-list">
+        <div class="feature-item">
+          <div class="feature-icon"><i class="fa-solid fa-bolt"></i></div>
+          <div class="feature-text">
+            <h4>Lightning Fast</h4>
+            <p>Process transactions in seconds with our optimized infrastructure and cutting-edge technology</p>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon"><i class="fa-solid fa-dollar-sign"></i></div>
+          <div class="feature-text">
+            <h4>Low Fees</h4>
+            <p>Enjoy competitive rates and transparent pricing with no hidden charges or surprise fees</p>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon"><i class="fa-solid fa-lock"></i></div>
+          <div class="feature-text">
+            <h4>Bank-Level Security</h4>
+            <p>Your funds are protected with industry-leading security measures and insurance coverage</p>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon"><i class="fa-solid fa-globe"></i></div>
+          <div class="feature-text">
+            <h4>Global Access</h4>
+            <p>Access your money from anywhere in the world with our global network and partnerships</p>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon"><i class="fa-solid fa-chart-pie"></i></div>
+          <div class="feature-text">
+            <h4>Analytics Dashboard</h4>
+            <p>Track your spending, savings, and investments with detailed insights and reports</p>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon"><i class="fa-solid fa-award"></i></div>
+          <div class="feature-text">
+            <h4>Rewards Program</h4>
+            <p>Earn points and cashback on every transaction with our loyalty rewards program</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FAQ Section -->
+  <div class="faq-section">
+    <div class="faq-container">
+      <h2 class="section-title">FREQUENTLY ASKED QUESTIONS</h2>
+      
+      <div class="faq-item">
+        <div class="faq-question" onclick="toggleFAQ(this)">
+          <h3>How do I get a ZestPay card?</h3>
+          <i class="fas fa-chevron-down faq-icon"></i>
+        </div>
+        <div class="faq-answer">
+          <p>Getting a ZestPay card is simple! Sign up for an account, complete the verification process, and you'll be able to request your virtual or physical card directly from the app. Virtual cards are issued instantly, while physical cards are delivered within 5-7 business days.</p>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question" onclick="toggleFAQ(this)">
+          <h3>What are the fees associated with ZestPay cards?</h3>
+          <i class="fas fa-chevron-down faq-icon"></i>
+        </div>
+        <div class="faq-answer">
+          <p>ZestPay offers transparent pricing with no hidden fees. Virtual cards have a minimal issuance fee, while physical cards have a one-time delivery fee. Transaction fees are competitive and clearly displayed before you confirm any payment. ATM withdrawals and international transactions may have additional fees.</p>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question" onclick="toggleFAQ(this)">
+          <h3>Is my money safe with ZestPay?</h3>
+          <i class="fas fa-chevron-down faq-icon"></i>
+        </div>
+        <div class="faq-answer">
+          <p>Absolutely! We use bank-level 256-bit SSL encryption, two-factor authentication, and advanced fraud detection systems. Your funds are held in secured accounts with reputable financial institutions, and we're fully licensed and regulated by financial authorities.</p>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question" onclick="toggleFAQ(this)">
+          <h3>Can I use ZestPay cards internationally?</h3>
+          <i class="fas fa-chevron-down faq-icon"></i>
+        </div>
+        <div class="faq-answer">
+          <p>Yes! ZestPay cards are accepted worldwide wherever Visa and Mastercard are accepted. You can use them for online purchases, in-store payments, and ATM withdrawals globally. We automatically handle currency conversion at competitive exchange rates.</p>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question" onclick="toggleFAQ(this)">
+          <h3>How do I load funds onto my ZestPay card?</h3>
+          <i class="fas fa-chevron-down faq-icon"></i>
+        </div>
+        <div class="faq-answer">
+          <p>You can load funds through multiple methods: bank transfer, debit/credit card, cryptocurrency exchange, or from other ZestPay users. All deposits are processed instantly, and you'll receive a notification as soon as your funds are available.</p>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question" onclick="toggleFAQ(this)">
+          <h3>What currencies are supported by ZestPay cards?</h3>
+          <i class="fas fa-chevron-down faq-icon"></i>
+        </div>
+        <div class="faq-answer">
+          <p>ZestPay supports multiple major currencies including USD, EUR, GBP, NGN, GHS, KES, ZAR, and more. You can hold balances in multiple currencies and switch between them seamlessly with our real-time exchange rates.</p>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question" onclick="toggleFAQ(this)">
+          <h3>How do I report a lost or stolen card?</h3>
+          <i class="fas fa-chevron-down faq-icon"></i>
+        </div>
+        <div class="faq-answer">
+          <p>If your card is lost or stolen, you can immediately freeze it through the ZestPay app or by contacting our support team. We'll issue a replacement card right away, and you won't be liable for any unauthorized transactions made after you report the loss.</p>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question" onclick="toggleFAQ(this)">
+          <h3>Are there spending limits on ZestPay cards?</h3>
+          <i class="fas fa-chevron-down faq-icon"></i>
+        </div>
+        <div class="faq-answer">
+          <p>Yes, there are default spending limits for security purposes, but these can be adjusted in your account settings. Virtual cards typically have lower limits than physical cards. Premium account holders enjoy higher limits and more flexible terms.</p>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question" onclick="toggleFAQ(this)">
+          <h3>How does ZestPay protect against fraud?</h3>
+          <i class="fas fa-chevron-down faq-icon"></i>
+        </div>
+        <div class="faq-answer">
+          <p>We employ multiple layers of security including real-time transaction monitoring, AI-powered fraud detection, location-based verification, and instant transaction alerts. You can also set up custom spending alerts and temporary card freezes for additional security.</p>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question" onclick="toggleFAQ(this)">
+          <h3>Can I use my ZestPay card with mobile payment services?</h3>
+          <i class="fas fa-chevron-down faq-icon"></i>
+        </div>
+        <div class="faq-answer">
+          <p>Absolutely! ZestPay cards are fully compatible with Apple Pay, Google Pay, Samsung Pay, and other major mobile payment services. Simply add your card to your preferred wallet app and enjoy contactless payments with your phone or smartwatch.</p>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question" onclick="toggleFAQ(this)">
+          <h3>What happens if a transaction is disputed?</h3>
+          <i class="fas fa-chevron-down faq-icon"></i>
+        </div>
+        <div class="faq-answer">
+          <p>If you need to dispute a transaction, simply contact our support team within 30 days of the transaction date. We'll investigate the dispute on your behalf and work with the merchant to resolve the issue. We follow all standard chargeback procedures and consumer protection regulations.</p>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question" onclick="toggleFAQ(this)">
+          <h3>How do I close my ZestPay account?</h3>
+          <i class="fas fa-chevron-down faq-icon"></i>
+        </div>
+        <div class="faq-answer">
+          <p>If you need to close your account, ensure all pending transactions are complete and your balance is zero. You can initiate the closure process through the app or by contacting customer support. We'll process your request within 5 business days and provide confirmation once completed.</p>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question" onclick="toggleFAQ(this)">
+          <h3>Does ZestPay offer business accounts?</h3>
+          <i class="fas fa-chevron-down faq-icon"></i>
+        </div>
+        <div class="faq-answer">
+          <p>Yes! ZestPay Business offers specialized features for entrepreneurs and companies including multi-user accounts, expense management tools, corporate cards, accounting integrations, and preferential rates for high-volume transactions. Contact our business team for a customized solution.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom Navigation -->
+  <div class="bottom-nav">
+    <a href="/dashboard"><i class="fas fa-home"></i>Home</a>
+    <a href="/rates"><i class="fas fa-coins"></i>Rates</a>
+    <a href="/cards" class="active"><i class="fas fa-credit-card"></i>Cards</a>
+    <a href="/settings"><i class="fas fa-user"></i>Account</a>
+  </div>
+
+  <!-- Chat Button -->
+  <div class="chat-button" id="chatButton">
+    <i class="fas fa-comment-dots"></i>
+  </div>
+
+  <!-- Chat Container -->
+  <div class="chat-container" id="chatContainer">
+    <div class="chat-header">
+      <h3>
+        <i class="fas fa-robot"></i>
+        Chat with ZP
+      </h3>
+      <div class="chat-status">
+        <div class="status-dot"></div>
+        <span>Online</span>
+      </div>
+      <button class="close-chat" id="closeChat">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+    
+    <div class="chat-messages" id="chatMessages">
+      <div class="message bot">
+        Hi there! I'm ZP, your virtual assistant. How can I help you with ZestPay today?
+        <div class="message-time">Just now</div>
+      </div>
+    </div>
+    
+    <div class="chat-input-container">
+      <input type="text" class="chat-input" id="chatInput" placeholder="Type your message...">
+      <button class="send-button" id="sendButton">
+        <i class="fas fa-paper-plane"></i>
+      </button>
+    </div>
+  </div>
+
+  <script>
+    // FAQ Toggle
+    function toggleFAQ(element) {
+      const faqItem = element.parentElement;
+      const allItems = document.querySelectorAll('.faq-item');
+      
+      // Close all other items
+      allItems.forEach(item => {
+        if (item !== faqItem) {
+          item.classList.remove('active');
+        }
+      });
+      
+      // Toggle current item
+      faqItem.classList.toggle('active');
+    }
+
+    // Chat Functionality
+    const chatButton = document.getElementById('chatButton');
+    const chatContainer = document.getElementById('chatContainer');
+    const closeChat = document.getElementById('closeChat');
+    const chatInput = document.getElementById('chatInput');
+    const sendButton = document.getElementById('sendButton');
+    const chatMessages = document.getElementById('chatMessages');
+    
+    // Toggle Chat
+    chatButton.addEventListener('click', () => {
+      chatContainer.classList.add('active');
+      chatButton.classList.add('active');
+      chatInput.focus();
+    });
+    
+    closeChat.addEventListener('click', () => {
+      chatContainer.classList.remove('active');
+      chatButton.classList.remove('active');
+    });
+    
+    // Send Message
+    function sendMessage() {
+      const message = chatInput.value.trim();
+      if (message === '') return;
+      
+      // Add user message
+      const userMessage = document.createElement('div');
+      userMessage.classList.add('message', 'user');
+      userMessage.innerHTML = `
+        ${message}
+        <div class="message-time">${getCurrentTime()}</div>
+      `;
+      chatMessages.appendChild(userMessage);
+      
+      // Clear input
+      chatInput.value = '';
+      
+      // Scroll to bottom
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+      
+      // Show typing indicator
+      showTypingIndicator();
+      
+      // Send to Telegram bot and get response
+      sendToTelegram(message);
+    }
+    
+    // Event Listeners
+    sendButton.addEventListener('click', sendMessage);
+    chatInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        sendMessage();
+      }
+    });
+    
+    // Show Typing Indicator
+    function showTypingIndicator() {
+      const typingIndicator = document.createElement('div');
+      typingIndicator.classList.add('typing-indicator');
+      typingIndicator.id = 'typingIndicator';
+      typingIndicator.innerHTML = `
+        <div class="typing-dot"></div>
+        <div class="typing-dot"></div>
+        <div class="typing-dot"></div>
+      `;
+      chatMessages.appendChild(typingIndicator);
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+    
+    // Hide Typing Indicator
+    function hideTypingIndicator() {
+      const typingIndicator = document.getElementById('typingIndicator');
+      if (typingIndicator) {
+        typingIndicator.remove();
+      }
+    }
+    
+    // Get Current Time
+    function getCurrentTime() {
+      const now = new Date();
+      return now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    }
+    
+    // Send to Telegram Bot
+    async function sendToTelegram(message) {
+      try {
+        // Replace with your actual Telegram Bot API token and chat ID
+        const botToken = '7943497563:AAGYHHTqDA0IBZgWfXbmaJE589ux2nVTysk';
+        const chatId = '7943497563';
+        
+        // In a real implementation, you would send the message to your Telegram bot
+        // For demo purposes, we'll simulate a response after a delay
+        setTimeout(() => {
+          hideTypingIndicator();
+          
+          // Simulate bot response
+          const botResponses = [
+            "Thank you for your message! Our team will get back to you shortly.",
+            "I understand your question. Let me find the best answer for you.",
+            "That's a great question! Our virtual cards will be available next month.",
+            "I'm here to help! Could you provide more details about your inquiry?",
+            "Thanks for reaching out! Our physical cards are in the final testing phase."
+          ];
+          
+          const randomResponse = botResponses[Math.floor(Math.random() * botResponses.length)];
+          
+          // Add bot response
+          const botMessage = document.createElement('div');
+          botMessage.classList.add('message', 'bot');
+          botMessage.innerHTML = `
+            ${randomResponse}
+            <div class="message-time">${getCurrentTime()}</div>
+          `;
+          chatMessages.appendChild(botMessage);
+          
+          // Scroll to bottom
+          chatMessages.scrollTop = chatMessages.scrollHeight;
+          
+          // In a real implementation, you would fetch the actual response from your bot
+           fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+             method: 'POST',
+             headers: {
+               'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              chat_id: chatId,
+              text: message,
+            }),
+           })
+           .then(response => response.json())
+           .then(data => {
+          // Process the response and display it in the chat
+             hideTypingIndicator();
+          //   // Add bot response to chat
+           })
+           .catch(error => {
+             console.error('Error sending message to Telegram:', error);
+            hideTypingIndicator();
+          //   // Show error message in chat
+           });
+        }, 1500);
+      } catch (error) {
+        console.error('Error in sendToTelegram:', error);
+        hideTypingIndicator();
+        
+        // Show error message
+        const errorMessage = document.createElement('div');
+        errorMessage.classList.add('message', 'bot');
+        errorMessage.innerHTML = `
+          Sorry, I'm having trouble connecting right now. Please try again later.
+          <div class="message-time">${getCurrentTime()}</div>
+        `;
+        chatMessages.appendChild(errorMessage);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+      }
+    }
+  </script>
+
+</body>
+</html>

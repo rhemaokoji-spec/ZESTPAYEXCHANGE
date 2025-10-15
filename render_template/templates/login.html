@@ -1,0 +1,942 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>ZestPay Login</title>
+<style>
+  body {
+    margin:0; padding:0;
+    font-family: Arial, sans-serif;
+    color:#fff; display:flex;
+    justify-content:center; align-items:center;
+    min-height:100vh;
+    overflow: hidden;
+    position: relative;
+  }
+  
+  /* Video Background */
+  .video-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: -2;
+  }
+  
+  /* Overlay for better readability */
+  .overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: -1;
+  }
+  
+  .container {
+    width:90%; max-width:400px;
+    background:rgba(0,0,0,0.8);
+    padding:30px 25px;
+    border-radius:12px;
+    box-shadow:0 0 20px rgba(212, 175, 55, 0.4);
+    text-align:center;
+    border: 1px solid rgba(212, 175, 55, 0.3);
+    position: relative;
+    margin: 20px;
+  }
+  
+  .logo {
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+  }
+  
+  .logo i {
+    font-size: 32px;
+    color: #d4af37;
+  }
+  
+  .logo-text {
+    font-size: 24px;
+    font-weight: bold;
+    color: #d4af37;
+    letter-spacing: 1px;
+  }
+  
+  h2 { 
+    margin-bottom:20px; 
+    color: #d4af37;
+    text-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+    font-size: 22px;
+  }
+  
+  .input-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+  }
+  
+  .input-icon {
+    position: absolute;
+    left: 15px;
+    color: #d4af37;
+    font-size: 16px;
+  }
+  
+  input {
+    flex: 1;
+    padding:15px 15px 15px 45px;
+    margin:10px 0;
+    border:none;
+    border-radius:8px;
+    background:rgba(30, 30, 30, 0.9); 
+    color:#fff;
+    border: 1px solid rgba(212, 175, 55, 0.3);
+    font-size: 16px;
+    box-sizing: border-box;
+    width: 100%;
+  }
+  
+  input:focus { 
+    outline:none; 
+    box-shadow:0 0 8px rgba(212, 175, 55, 0.5);
+    border: 1px solid rgba(212, 175, 55, 0.7);
+  }
+  
+  input.valid {
+    border: 1px solid rgba(76, 175, 80, 0.7);
+  }
+  
+  input.invalid {
+    border: 1px solid rgba(244, 67, 54, 0.7);
+  }
+  
+  .validation-icon {
+    position: absolute;
+    right: 15px;
+    font-size: 16px;
+    display: none;
+  }
+  
+  .validation-icon.valid {
+    color: #4CAF50;
+    display: block;
+  }
+  
+  .validation-icon.invalid {
+    color: #f44336;
+    display: block;
+  }
+  
+  .show-hide {
+    position: absolute;
+    right: 15px;
+    cursor: pointer;
+    font-size: 14px;
+    color: #d4af37;
+    background: none;
+    border: none;
+    padding: 5px;
+  }
+  
+  .btn {
+    width:100%; padding:15px;
+    border:none; border-radius:8px;
+    background:linear-gradient(90deg, #d4af37, #b8860b);
+    font-weight:bold; cursor:pointer;
+    transition:0.3s;
+    margin-top: 15px;
+    box-shadow: 0 4px 10px rgba(212, 175, 55, 0.3);
+    font-size: 16px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  
+  .btn:hover { 
+    transform:scale(1.02); 
+    box-shadow: 0 6px 15px rgba(212, 175, 55, 0.5);
+  }
+  
+  .btn:active {
+    transform: scale(0.98);
+  }
+  
+  .btn:disabled {
+    background: #555;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+  }
+  
+  .forgot-btn {
+    width:100%; padding:15px;
+    border:none; border-radius:8px;
+    background:linear-gradient(90deg, #ff9933, #e68a00);
+    font-weight:bold; cursor:pointer;
+    transition:0.3s;
+    margin-top: 15px;
+    box-shadow: 0 4px 10px rgba(255, 153, 51, 0.3);
+    font-size: 16px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    display: none;
+  }
+  
+  .forgot-btn:hover { 
+    transform:scale(1.02); 
+    box-shadow: 0 6px 15px rgba(255, 153, 51, 0.5);
+  }
+  
+  .forgot-btn:active {
+    transform: scale(0.98);
+  }
+  
+  .register-btn {
+    width:100%; padding:15px;
+    border:none; border-radius:8px;
+    background:linear-gradient(90deg, #4CAF50, #45a049);
+    font-weight:bold; cursor:pointer;
+    transition:0.3s;
+    margin-top: 15px;
+    box-shadow: 0 4px 10px rgba(76, 175, 80, 0.3);
+    font-size: 16px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    display: none;
+  }
+  
+  .register-btn:hover { 
+    transform:scale(1.02); 
+    box-shadow: 0 6px 15px rgba(76, 175, 80, 0.5);
+  }
+  
+  .register-btn:active {
+    transform: scale(0.98);
+  }
+  
+  .error-msg { 
+    color:#ff4c4c; 
+    font-size:13px; 
+    margin-top: 10px;
+    min-height: 20px;
+  }
+  
+  .success-msg { 
+    color:#d4af37; 
+    font-size:14px;
+    margin-top: 10px;
+    min-height: 20px;
+  }
+  
+  .warning-msg {
+    color:#ff9933;
+    font-size:14px;
+    margin-top: 10px;
+    min-height: 20px;
+  }
+  
+  .email-validation {
+    font-size: 12px;
+    margin-top: 5px;
+    text-align: left;
+    padding-left: 45px;
+    min-height: 16px;
+  }
+  
+  .email-validation.valid {
+    color: #4CAF50;
+  }
+  
+  .email-validation.invalid {
+    color: #f44336;
+  }
+  
+  .loading { 
+    display:none; 
+    margin-top:20px;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+  }
+  
+  .loading-text {
+    margin-top: 10px;
+    font-size: 14px;
+    color: #d4af37;
+  }
+  
+  .loading span {
+    display:inline-block;
+    font-size:22px; font-weight:bold;
+    color:#d4af37;
+    animation: bounce 1.2s infinite;
+  }
+  
+  .loading span:nth-child(2) { animation-delay:0.2s; }
+  .loading span:nth-child(3) { animation-delay:0.4s; }
+  .loading span:nth-child(4) { animation-delay:0.6s; }
+  .loading span:nth-child(5) { animation-delay:0.8s; }
+  .loading span:nth-child(6) { animation-delay:1s; }
+  .loading span:nth-child(7) { animation-delay:1.2s; }
+  
+  @keyframes bounce {
+    0%, 80%, 100% { transform: scale(0.8); opacity:0.5; }
+    40% { transform: scale(1.3); opacity:1; }
+  }
+  
+  .forgot-link {
+    margin-top:15px;
+    font-size:14px;
+    color:#d4af37;
+    display:none;
+    cursor:pointer;
+    text-decoration:underline;
+  }
+  
+  .register-link {
+    margin-top:20px;
+    font-size:14px;
+    color:#aaa;
+  }
+  
+  .register-link a {
+    color:#d4af37;
+    text-decoration: none;
+    font-weight: bold;
+  }
+  
+  .network-status {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 8px;
+    text-align: center;
+    background: rgba(244, 67, 54, 0.9);
+    color: white;
+    font-size: 14px;
+    z-index: 1000;
+    transform: translateY(-100%);
+    transition: transform 0.3s ease;
+  }
+  
+  .network-status.show {
+    transform: translateY(0);
+  }
+  
+  .network-status.online {
+    background: rgba(76, 175, 80, 0.9);
+  }
+  
+  .reset-warning {
+    background: rgba(255, 153, 51, 0.2);
+    border: 1px solid #ff9933;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+    display: none;
+    animation: pulse 2s infinite;
+  }
+  
+  @keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(255, 153, 51, 0.4); }
+    70% { box-shadow: 0 0 0 10px rgba(255, 153, 51, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(255, 153, 51, 0); }
+  }
+  
+  .reset-warning-title {
+    color: #ff9933;
+    font-weight: bold;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    font-size: 18px;
+  }
+  
+  .reset-warning-text {
+    font-size: 14px;
+    color: #ddd;
+    margin-bottom: 15px;
+    line-height: 1.5;
+  }
+  
+  .reset-warning-icon {
+    font-size: 48px;
+    color: #ff9933;
+    margin-bottom: 15px;
+    animation: shake 2s infinite;
+  }
+  
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+    20%, 40%, 60%, 80% { transform: translateX(5px); }
+  }
+  
+  .continue-reset {
+    width: 100%;
+    padding: 12px;
+    border-radius: 8px;
+    border: none;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+    background: #ff9933;
+    color: #000;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    box-shadow: 0 4px 10px rgba(255, 153, 51, 0.3);
+  }
+  
+  .continue-reset:hover {
+    background: #e68a00;
+    transform: scale(1.02);
+    box-shadow: 0 6px 15px rgba(255, 153, 51, 0.5);
+  }
+  
+  .blocked-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    z-index: 999;
+    display: none;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .blocked-message {
+    background: rgba(255, 153, 51, 0.2);
+    border: 2px solid #ff9933;
+    border-radius: 12px;
+    padding: 30px;
+    text-align: center;
+    max-width: 400px;
+  }
+  
+  .blocked-message h3 {
+    color: #ff9933;
+    margin-bottom: 15px;
+    font-size: 20px;
+  }
+  
+  .blocked-message p {
+    color: #ddd;
+    margin-bottom: 20px;
+    line-height: 1.5;
+  }
+  
+  /* Mobile-specific adjustments */
+  @media (max-width: 480px) {
+    .container {
+      width: 85%;
+      padding: 25px 20px;
+      margin: 15px;
+    }
+    
+    .logo i {
+      font-size: 28px;
+    }
+    
+    .logo-text {
+      font-size: 20px;
+    }
+    
+    h2 {
+      font-size: 20px;
+      margin-bottom: 15px;
+    }
+    
+    input {
+      padding: 14px 14px 14px 40px;
+      font-size: 15px;
+    }
+    
+    .btn {
+      padding: 14px;
+      font-size: 15px;
+    }
+    
+    .forgot-btn {
+      padding: 14px;
+      font-size: 15px;
+    }
+    
+    .register-btn {
+      padding: 14px;
+      font-size: 15px;
+    }
+    
+    .loading span {
+      font-size: 18px;
+    }
+    
+    .reset-warning {
+      padding: 15px;
+    }
+    
+    .reset-warning-text {
+      font-size: 13px;
+    }
+    
+    .reset-warning-icon {
+      font-size: 40px;
+    }
+    
+    .continue-reset {
+      padding: 10px;
+      font-size: 14px;
+    }
+  }
+  
+  @media (max-height: 600px) {
+    .container {
+      margin: 10px;
+      padding: 20px 15px;
+    }
+    
+    .logo {
+      margin-bottom: 15px;
+    }
+    
+    h2 {
+      margin-bottom: 15px;
+    }
+    
+    .input-container {
+      margin-bottom: 12px;
+    }
+    
+    .btn {
+      margin-top: 12px;
+    }
+    
+    .forgot-btn {
+      margin-top: 12px;
+    }
+    
+    .register-btn {
+      margin-top: 12px;
+    }
+    
+    .reset-warning {
+      padding: 12px;
+      margin-bottom: 15px;
+    }
+  }
+</style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+
+<!-- Video Background -->
+<video class="video-background" autoplay muted loop>
+  <!-- Replace with your video source -->
+  <source src="zest videos.mp4" type="video/mp4">
+  <!-- Fallback for browsers that don't support video -->
+ 
+</video>
+
+<!-- Overlay for better readability -->
+<div class="overlay"></div>
+
+<!-- Network Status Indicator -->
+<div class="network-status" id="networkStatus">
+  <i class="fa-solid fa-wifi"></i> <span id="networkStatusText">No internet connection</span>
+</div>
+
+<!-- Blocked Overlay -->
+<div class="blocked-overlay" id="blockedOverlay">
+  <div class="blocked-message">
+    <h3><i class="fa-solid fa-lock"></i> Access Blocked</h3>
+    <p>You must complete the password reset process before you can log in. Please finish the reset process to regain access to your account.</p>
+    <button class="continue-reset" onclick="goToReset()">Complete Password Reset</button>
+  </div>
+</div>
+
+<div class="container">
+  <div class="logo">
+    <i class="fa-solid fa-bolt"></i>
+    <span class="logo-text">ZESTPAY</span>
+  </div>
+  
+  <h2>LOGIN</h2>
+  
+  <!-- Password Reset Warning -->
+  <div class="reset-warning" id="resetWarning">
+    <div class="reset-warning-icon">
+      <i class="fa-solid fa-exclamation-triangle"></i>
+    </div>
+    <div class="reset-warning-title">
+      <span>Security Alert</span>
+    </div>
+    <div class="reset-warning-text">
+      This account has an ongoing password reset process that must be completed before you can log in. For your security, you cannot cancel this process.
+    </div>
+    <button class="continue-reset" onclick="goToReset()">
+      <i class="fa-solid fa-key"></i> Complete Password Reset
+    </button>
+  </div>
+  
+  <!-- Email input with icon --> 
+  <div class="input-container">
+    <i class="fa-solid fa-envelope input-icon"></i>
+    <input type="email" id="email" placeholder="Email" autocomplete="on" required>
+    <i class="fa-solid fa-check-circle validation-icon" id="emailValidIcon"></i>
+    <i class="fa-solid fa-exclamation-circle validation-icon" id="emailInvalidIcon"></i>
+  </div>
+  <div class="email-validation" id="emailValidation"></div>
+  
+  <!-- Password input with show/hide -->
+  <div class="input-container">
+    <i class="fa-solid fa-lock input-icon"></i>
+    <input type="password" id="password" placeholder="Password" required>
+    <button type="button" class="show-hide" onclick="togglePassword()">Show</button>
+  </div>
+
+  <button class="btn" id="loginBtn" onclick="loginUser()">Login</button>
+  <button class="forgot-btn" id="forgotBtn" onclick="goToReset()">
+    <i class="fa-solid fa-key"></i> Forgot Password? Click Here To Reset
+  </button>
+  <button class="register-btn" id="registerBtn" onclick="goToRegister()">
+    <i class="fa-solid fa-user-plus"></i> New User? Register Here
+  </button>
+  <p id="message" class="error-msg"></p>
+  <p id="forgot" class="forgot-link" onclick="goToReset()">Forgot Password? Click here to reset</p>
+  
+  <div class="register-link">
+    Don't have an account? <a href="/register">Sign up</a>
+  </div>
+
+  <!-- ZestPay Loading Animation -->
+  <div class="loading" id="loading">
+    <div>
+      <span>Z</span><span>E</span><span>S</span><span>T</span>
+      <span>P</span><span>A</span><span>Y</span>
+    </div>
+    <div class="loading-text" id="loadingText">Logging in...</div>
+  </div>
+</div>
+
+<script>
+let loginAttempts = 0;
+let emailValid = false;
+
+// Network status detection
+function updateNetworkStatus() {
+  const networkStatus = document.getElementById("networkStatus");
+  const networkStatusText = document.getElementById("networkStatusText");
+  
+  if (navigator.onLine) {
+    networkStatus.classList.add("online");
+    networkStatusText.textContent = "Connection restored";
+    setTimeout(() => {
+      networkStatus.classList.remove("show");
+    }, 3000);
+  } else {
+    networkStatus.classList.remove("online");
+    networkStatusText.textContent = "No internet connection";
+    networkStatus.classList.add("show");
+  }
+}
+
+// Initial network status check
+updateNetworkStatus();
+
+// Listen for network status changes
+window.addEventListener("online", updateNetworkStatus);
+window.addEventListener("offline", updateNetworkStatus);
+
+function togglePassword() {
+  const passwordInput = document.getElementById("password");
+  const toggleBtn = document.querySelector(".show-hide");
+  if (passwordInput.type === "password") {
+    passwordInput.type = "text";
+    toggleBtn.textContent = "Hide";
+  } else {
+    passwordInput.type = "password";
+    toggleBtn.textContent = "Show";
+  }
+}
+
+function goToReset() {
+  window.location.href = "/forgot"; // <-- replace with your reset page
+}
+
+function goToRegister() {
+  window.location.href = "/register"; // <-- replace with your register page
+}
+
+// Email validation function
+function validateEmail(email) {
+  // More comprehensive email validation regex
+  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  return emailRegex.test(email);
+}
+
+// Function to update email validation UI
+function updateEmailValidation() {
+  const emailInput = document.getElementById("email");
+  const emailValidation = document.getElementById("emailValidation");
+  const emailValidIcon = document.getElementById("emailValidIcon");
+  const emailInvalidIcon = document.getElementById("emailInvalidIcon");
+  const email = emailInput.value.trim();
+  
+  if (email === "") {
+    // Empty email
+    emailInput.classList.remove("valid", "invalid");
+    emailValidIcon.classList.remove("valid");
+    emailInvalidIcon.classList.remove("invalid");
+    emailValidation.textContent = "";
+    emailValidation.classList.remove("valid", "invalid");
+    emailValid = false;
+  } else if (validateEmail(email)) {
+    // Valid email
+    emailInput.classList.remove("invalid");
+    emailInput.classList.add("valid");
+    emailValidIcon.classList.add("valid");
+    emailInvalidIcon.classList.remove("invalid");
+    emailValidation.textContent = "Valid email format";
+    emailValidation.classList.remove("invalid");
+    emailValidation.classList.add("valid");
+    emailValid = true;
+  } else {
+    // Invalid email
+    emailInput.classList.remove("valid");
+    emailInput.classList.add("invalid");
+    emailValidIcon.classList.remove("valid");
+    emailInvalidIcon.classList.add("invalid");
+    
+    // Provide specific error message based on the issue
+    if (!email.includes("@")) {
+      emailValidation.textContent = "Email must contain '@' symbol";
+    } else if (!email.includes(".")) {
+      emailValidation.textContent = "Email must contain a domain (e.g., .com)";
+    } else if (email.split("@")[0].length < 1) {
+      emailValidation.textContent = "Username before '@' is required";
+    } else if (email.split("@")[1].length < 3) {
+      emailValidation.textContent = "Domain after '@' is too short";
+    } else if (email.split(".").pop().length < 2) {
+      emailValidation.textContent = "Top-level domain is too short (e.g., .com, .org)";
+    } else {
+      emailValidation.textContent = "Please enter a valid email address";
+    }
+    
+    emailValidation.classList.remove("valid");
+    emailValidation.classList.add("invalid");
+    emailValid = false;
+  }
+}
+
+// Check for ongoing password reset on page load
+document.addEventListener("DOMContentLoaded", function() {
+  const resetInProgress = localStorage.getItem('passwordResetInProgress');
+  const resetEmail = localStorage.getItem('passwordResetEmail');
+  
+  if (resetInProgress === 'true') {
+    // Show the warning immediately
+    document.getElementById('resetWarning').style.display = 'block';
+    
+    // Disable login form
+    document.getElementById('email').disabled = true;
+    document.getElementById('password').disabled = true;
+    document.getElementById('loginBtn').disabled = true;
+    document.getElementById('loginBtn').style.opacity = '0.5';
+    document.getElementById('loginBtn').style.cursor = 'not-allowed';
+    
+    // If email is stored, show it
+    if (resetEmail) {
+      document.getElementById('email').value = resetEmail;
+    }
+    
+    // Show warning message
+    document.getElementById('message').className = 'warning-msg';
+    document.getElementById('message').innerText = 'Password reset in progress. Complete it to continue.';
+  }
+  
+  // Add event listener for email validation
+  const emailInput = document.getElementById("email");
+  emailInput.addEventListener("input", updateEmailValidation);
+  emailInput.addEventListener("blur", updateEmailValidation);
+});
+
+// Prevent right-click and certain keyboard shortcuts when reset is in progress
+document.addEventListener('contextmenu', function(e) {
+  if (localStorage.getItem('passwordResetInProgress') === 'true') {
+    e.preventDefault();
+    return false;
+  }
+});
+
+document.addEventListener('keydown', function(e) {
+  if (localStorage.getItem('passwordResetInProgress') === 'true') {
+    // Prevent Alt+Tab, Ctrl+Shift+T, etc.
+    if (e.altKey || (e.ctrlKey && e.shiftKey)) {
+      e.preventDefault();
+      return false;
+    }
+  }
+});
+
+// Prevent page refresh when reset is in progress
+window.addEventListener('beforeunload', function(e) {
+  if (localStorage.getItem('passwordResetInProgress') === 'true') {
+    e.preventDefault();
+    e.returnValue = 'You must complete the password reset process before leaving this page.';
+  }
+});
+
+async function loginUser() {
+  const email = document.getElementById("email").value.trim();
+  const password = document.getElementById("password").value;
+  const message = document.getElementById("message");
+  const loading = document.getElementById("loading");
+  const loadingText = document.getElementById("loadingText");
+  const forgot = document.getElementById("forgot");
+  const resetWarning = document.getElementById("resetWarning");
+  const loginBtn = document.getElementById("loginBtn");
+  const forgotBtn = document.getElementById("forgotBtn");
+  const registerBtn = document.getElementById("registerBtn");
+
+  // Check if there's an ongoing password reset for this email
+  const resetInProgress = localStorage.getItem('passwordResetInProgress');
+  const resetEmail = localStorage.getItem('passwordResetEmail');
+  
+  if (resetInProgress === 'true') {
+    // Block login attempt
+    document.getElementById('blockedOverlay').style.display = 'flex';
+    return;
+  }
+
+  // Validate email format
+  if (!email) {
+    message.className = "error-msg";
+    message.innerText = "Please enter your email address.";
+    return;
+  }
+  
+  if (!emailValid) {
+    message.className = "error-msg";
+    message.innerText = "Please enter a valid email address.";
+    return;
+  }
+
+  if (!password) {
+    message.className = "error-msg";
+    message.innerText = "Please enter your password.";
+    return;
+  }
+
+  if (!navigator.onLine) {
+    message.className = "error-msg";
+    message.innerText = "No internet connection. Please check your data.";
+    return;
+  }
+
+  try {
+    loading.style.display = "flex"; 
+    loadingText.textContent = "Logging in...";
+    message.innerText = "";
+
+    const res = await fetch("http://127.0.0.1:5000/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password })
+    });
+
+    const data = await res.json();
+
+    if (data.status === "ok") {
+      // Hide loading animation
+      loading.style.display = "none";
+      
+      // Show success message for 1 second
+      message.className = "success-msg";
+      message.innerText = "Login successful!";
+      loginAttempts = 0; // reset attempts
+      
+      // Clear any password reset state for this email if login is successful
+      if (resetEmail === email) {
+        localStorage.removeItem('passwordResetInProgress');
+        localStorage.removeItem('passwordResetEmail');
+        localStorage.removeItem('passwordResetStep');
+      }
+      
+      // After 2 second, show loading animation for data fetching
+      setTimeout(() => {
+        message.className = "";
+        message.innerText = "";
+        loading.style.display = "flex";
+        loadingText.textContent = "Loading your dashboard...";
+        
+        // Simulate data fetching and then redirect
+        setTimeout(() => {
+          window.location.href = "/dashboard";
+        }, 5000); // 2 seconds for data loading
+      }, 2000); // 1 second for success message
+    } else {
+      loading.style.display = "none"; 
+      message.className = "error-msg";
+      
+      // Check if the error is specifically about email not being registered
+      if (data.error && data.error.includes("email not registered")) {
+        message.innerText = "This email is not registered with us.";
+        loginBtn.style.display = "none";
+        registerBtn.style.display = "block";
+        forgotBtn.style.display = "none";
+      } else {
+        message.innerText = "Invalid email or password";
+        loginAttempts++;
+        
+        // After 5 failed attempts, hide login button and show forgot password button
+        if (loginAttempts >= 5) {
+          loginBtn.style.display = "none";
+          forgotBtn.style.display = "block";
+          message.innerText = "Too many failed attempts! Please reset your password.";
+        }
+      }
+    }
+  } catch (err) {
+    loading.style.display = "none"; 
+    message.className = "error-msg";
+    message.innerText = "Server error. Check your internet connection.";
+  }
+}
+
+// Handle form submission with Enter key
+document.addEventListener("DOMContentLoaded", function() {
+  const passwordInput = document.getElementById("password");
+  passwordInput.addEventListener("keypress", function(event) {
+    if (event.key === "Enter" && !document.getElementById('password').disabled) {
+      loginUser();
+    }
+  });
+  
+  const emailInput = document.getElementById("email");
+  emailInput.addEventListener("keypress", function(event) {
+    if (event.key === "Enter" && !document.getElementById('email').disabled) {
+      // Only move to password if email is valid
+      if (emailValid) {
+        passwordInput.focus();
+      } else {
+        updateEmailValidation();
+      }
+    }
+  });
+});
+</script>
+
+</body>
+</html>

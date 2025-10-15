@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ coin_id|capitalize }} - Trade</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #0e0e0e;
+      color: #fff;
+      padding: 20px;
+    }
+    h1 {
+      color: #00ff88;
+      margin-bottom: 10px;
+    }
+    .price {
+      font-size: 24px;
+      color: #00ff88;
+      margin-bottom: 20px;
+    }
+    .actions {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    button {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .buy { background: #00ff88; color: #000; }
+    .sell { background: #ff4444; color: #fff; }
+    .chat {
+      background: #1a1a1a;
+      padding: 15px;
+      border-radius: 12px;
+      height: 300px;
+      overflow-y: auto;
+      margin-bottom: 10px;
+    }
+    .msg {
+      margin: 5px 0;
+    }
+    .input-area {
+      display: flex;
+      gap: 10px;
+    }
+    .input-area input {
+      flex: 1;
+      padding: 10px;
+      border: none;
+      border-radius: 8px;
+    }
+    .input-area button {
+      background: #00ff88;
+      color: #000;
+    }
+  </style>
+</head>
+<body>
+  <h1>{{ coin_id|capitalize }} Trading</h1>
+  <div class="price" id="price">Loading...</div>
+
+  <div class="actions">
+    <button class="buy">Buy</button>
+    <button class="sell">Sell</button>
+  </div>
+
+  <div class="chat" id="chat">
+    <div class="msg">Welcome to {{ coin_id|capitalize }} chat 🚀</div>
+  </div>
+
+  <div class="input-area">
+    <input type="text" id="msgInput" placeholder="Type a message...">
+    <button onclick="sendMsg()">Send</button>
+  </div>
+
+  <script>
+    async function fetchPrice() {
+      let res = await fetch("https://api.coingecko.com/api/v3/simple/price?ids={{ coin_id }}&vs_currencies=usd");
+      let data = await res.json();
+      if (data["{{ coin_id }}"]) {
+        document.getElementById("price").textContent = "$" + data["{{ coin_id }}"].usd.toLocaleString();
+      }
+    }
+    fetchPrice();
+    setInterval(fetchPrice, 5000);
+
+    function sendMsg() {
+      let input = document.getElementById("msgInput");
+      let chat = document.getElementById("chat");
+      if (input.value.trim() !== "") {
+        let div = document.createElement("div");
+        div.className = "msg";
+        div.textContent = "You: " + input.value;
+        chat.appendChild(div);
+        chat.scrollTop = chat.scrollHeight;
+        input.value = "";
+      }
+    }
+  </script>
+</body>
+</html>

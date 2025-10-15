@@ -1,0 +1,2515 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard - ZestPay</title>
+  
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  
+  <style>
+    /* CSS Variables for theming */
+    :root {
+      --primary-color: #FFD700;
+      --primary-dark: #B8860B;
+      --secondary-color: #1a1a1a;
+      --accent-color: #FFF8DC;
+      --text-color: #333;
+      --text-light: #777;
+      --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      --bg-primary: #0a0a0a;
+      --bg-secondary: #1a1a1a;
+      --bg-tertiary: #0f0f0f;
+      --text-primary: #fff;
+      --text-secondary: #bbb;
+      --text-muted: #aaa;
+      --border-color: rgba(255, 255, 255, 0.1);
+      --card-bg: rgba(26, 26, 26, 0.9);
+      --nav-bg: rgba(26, 26, 26, 0.9);
+    }
+
+    /* Light mode variables */
+    [data-theme="light"] {
+      --primary-color: #FFD700;
+      --primary-dark: #B8860B;
+      --secondary-color: #f8f9fa;
+      --accent-color: #FFF8DC;
+      --text-color: #333;
+      --text-light: #777;
+      --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      --bg-primary: #f8f9fa;
+      --bg-secondary: #ffffff;
+      --bg-tertiary: #e9ecef;
+      --text-primary: #212529;
+      --text-secondary: #495057;
+      --text-muted: #6c757d;
+      --border-color: rgba(0, 0, 0, 0.1);
+      --card-bg: rgba(255, 255, 255, 0.95);
+      --nav-bg: rgba(255, 255, 255, 0.95);
+    }
+
+    /* BODY & GLOBAL */
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      margin: 0;
+      background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 50%, var(--bg-tertiary) 100%);
+      color: var(--text-primary);
+      min-height: 100vh;
+      transition: background 0.6s ease, color 0.3s ease;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      overflow-x: hidden;
+    }
+
+    /* Prevent scrolling when loading is active */
+    body.loading-active {
+      overflow: hidden;
+      position: fixed;
+      width: 100%;
+      height: 100%;
+    }
+
+    /* Theme Toggle Button */
+    .theme-toggle {
+      position: relative;
+      width: 60px;
+      height: 30px;
+      background: linear-gradient(135deg, #4a4a4a, #2a2a2a);
+      border-radius: 30px;
+      cursor: pointer;
+      transition: var(--transition);
+      border: 2px solid var(--primary-color);
+      overflow: hidden;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    [data-theme="light"] .theme-toggle {
+      background: linear-gradient(135deg, #f0f0f0, #d0d0d0);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .theme-toggle-slider {
+      position: absolute;
+      top: 3px;
+      left: 3px;
+      width: 20px;
+      height: 20px;
+      background: var(--primary-color);
+      border-radius: 50%;
+      transition: transform 0.3s ease, background 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    }
+
+    [data-theme="light"] .theme-toggle-slider {
+      transform: translateX(30px);
+      background: var(--primary-dark);
+    }
+
+    .theme-toggle-slider i {
+      font-size: 12px;
+      color: white;
+      transition: opacity 0.3s ease;
+    }
+
+    .theme-toggle:hover {
+      transform: scale(1.05);
+      box-shadow: 0 6px 20px rgba(255, 215, 0, 0.3);
+    }
+
+    /* Bootstrap overrides */
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+      border: none;
+      color: white;
+    }
+    
+    .btn-primary:hover, .btn-primary:focus {
+      background: linear-gradient(135deg, var(--primary-dark), var(--primary-color));
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(255, 215, 0, 0.3);
+    }
+    
+    .btn-outline-primary {
+      border-color: var(--primary-color);
+      color: var(--primary-color);
+    }
+    
+    .btn-outline-primary:hover, .btn-outline-primary:focus {
+      background-color: var(--primary-color);
+      border-color: var(--primary-color);
+    }
+    
+    .modal-content {
+      background: var(--card-bg);
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--border-color);
+    }
+    
+    .modal-header, .modal-footer {
+      border-color: var(--border-color);
+    }
+    
+    .toast-container {
+      position: fixed;
+      top: 80px;
+      right: 20px;
+      z-index: 1050;
+    }
+    
+    .toast {
+      background: var(--card-bg);
+      backdrop-filter: blur(20px);
+      color: var(--text-primary);
+      border: 1px solid var(--border-color);
+    }
+    
+    .toast-header {
+      background: transparent;
+      border-bottom: 1px solid var(--border-color);
+    }
+    
+    .toast-body {
+      color: var(--text-secondary);
+    }
+
+    /* Animated background elements */
+    .bg-shapes {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      z-index: -1;
+      opacity: 0.6;
+      transition: opacity 0.6s ease;
+    }
+
+    [data-theme="light"] .bg-shapes {
+      opacity: 0.3;
+    }
+
+    .shape {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.15;
+      animation: float 25s infinite ease-in-out;
+    }
+
+    .shape:nth-child(1) {
+      width: 500px;
+      height: 500px;
+      background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+      top: -250px;
+      left: -250px;
+      animation-duration: 30s;
+    }
+
+    .shape:nth-child(2) {
+      width: 400px;
+      height: 400px;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      bottom: -200px;
+      right: -200px;
+      animation-duration: 35s;
+      animation-delay: 5s;
+    }
+
+    .shape:nth-child(3) {
+      width: 350px;
+      height: 350px;
+      background: linear-gradient(135deg, #f093fb, #f5576c);
+      top: 50%;
+      left: 50%;
+      animation-duration: 40s;
+      animation-delay: 10s;
+    }
+
+    .shape:nth-child(4) {
+      width: 300px;
+      height: 300px;
+      background: linear-gradient(135deg, #4facfe, #00f2fe);
+      top: 20%;
+      right: 10%;
+      animation-duration: 28s;
+      animation-delay: 15s;
+    }
+
+    @keyframes float {
+      0%, 100% {
+        transform: translate(0, 0) rotate(0deg);
+      }
+      33% {
+        transform: translate(40px, -40px) rotate(120deg);
+      }
+      66% {
+        transform: translate(-30px, 30px) rotate(240deg);
+      }
+    }
+
+    /* HEADER */
+    .top {
+      background: var(--nav-bg);
+      backdrop-filter: blur(20px);
+      color: var(--text-primary);
+      padding: 15px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      flex-wrap: wrap;
+      border-bottom: 1px solid var(--border-color);
+      transition: background 0.3s ease, color 0.3s ease;
+    }
+
+    [data-theme="light"] .top {
+      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .logo i {
+      font-size: 28px;
+      background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .top strong {
+      font-size: 22px;
+      letter-spacing: 1px;
+      background: linear-gradient(135deg, var(--text-primary), var(--primary-color));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      font-weight: 700;
+      user-select: none;
+    }
+
+    /* Mobile menu toggle */
+    .menu-toggle {
+      display: none;
+      background: none;
+      border: none;
+      color: var(--primary-color);
+      font-size: 24px;
+      cursor: pointer;
+      padding: 5px;
+    }
+
+    nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+      align-items: center;
+    }
+
+    nav a {
+      color: var(--text-primary);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 14px;
+      display: inline-flex;
+      align-items: center;
+      transition: var(--transition);
+      padding: 10px 15px;
+      border-radius: 10px;
+      user-select: none;
+      position: relative;
+      overflow: hidden;
+    }
+
+    nav a::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.2), transparent);
+      transition: left 0.6s ease;
+    }
+
+    nav a:hover::before {
+      left: 100%;
+    }
+
+    nav a i {
+      margin-right: 6px;
+      font-size: 14px;
+    }
+
+    nav a:hover,
+    nav a:focus {
+      color: var(--primary-color);
+      transform: translateY(-2px);
+      outline: none;
+      background: rgba(255, 215, 0, 0.1);
+    }
+
+    /* CONTAINER */
+    .container {
+      padding: 20px;
+      max-width: 1400px;
+      margin: 0 auto;
+      min-height: calc(100vh - 70px);
+      transition: padding 0.3s ease;
+    }
+
+    /* Welcome Section */
+    .welcome-section {
+      margin-bottom: 25px;
+      animation: fadeInDown 0.8s ease;
+    }
+
+    @keyframes fadeInDown {
+      from {
+        opacity: 0;
+        transform: translateY(-30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .welcome-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(20px);
+      border-radius: 20px;
+      padding: 25px;
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+      border: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      overflow: hidden;
+      position: relative;
+      transition: background 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    [data-theme="light"] .welcome-card {
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    .welcome-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 6px;
+      height: 100%;
+      background: linear-gradient(180deg, var(--primary-color), var(--primary-dark));
+    }
+
+    .welcome-info h2 {
+      margin: 0 0 10px;
+      font-size: 24px;
+      font-weight: 700;
+      background: linear-gradient(90deg, var(--text-primary), var(--primary-color));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .welcome-info p {
+      margin: 0;
+      color: var(--text-secondary);
+      font-size: 16px;
+    }
+
+    .welcome-actions {
+      display: flex;
+      gap: 10px;
+    }
+
+    .welcome-actions .btn {
+      padding: 10px 18px;
+      background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+      color: white;
+      border-radius: 10px;
+      text-decoration: none;
+      font-weight: 600;
+      transition: var(--transition);
+      cursor: pointer;
+      user-select: none;
+      border: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 8px 20px rgba(255, 215, 0, 0.3);
+      position: relative;
+      overflow: hidden;
+      font-size: 14px;
+    }
+
+    .welcome-actions .btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.2);
+      transition: left 0.5s ease;
+    }
+
+    .welcome-actions .btn:hover::before {
+      left: 100%;
+    }
+
+    .welcome-actions .btn:hover,
+    .welcome-actions .btn:focus {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 25px rgba(255, 215, 0, 0.4);
+      outline: none;
+    }
+
+    .welcome-actions .btn-secondary {
+      background: transparent;
+      border: 2px solid var(--primary-color);
+      color: var(--primary-color);
+      box-shadow: none;
+    }
+
+    .welcome-actions .btn-secondary:hover,
+    .welcome-actions .btn-secondary:focus {
+      background: var(--primary-color);
+      color: white;
+    }
+
+    /* Stats Section */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 15px;
+      margin-bottom: 25px;
+    }
+
+    .stat-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(20px);
+      border-radius: 20px;
+      padding: 20px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+      border: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      transition: var(--transition);
+      position: relative;
+      overflow: hidden;
+    }
+
+    [data-theme="light"] .stat-card {
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    }
+
+    .stat-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background: linear-gradient(90deg, var(--primary-color), var(--primary-dark));
+      transform: scaleX(0);
+      transition: transform 0.3s ease;
+    }
+
+    .stat-card:hover::before {
+      transform: scaleX(1);
+    }
+
+    .stat-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+    }
+
+    [data-theme="light"] .stat-card:hover {
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+    }
+
+    .stat-icon {
+      width: 50px;
+      height: 50px;
+      border-radius: 15px;
+      background: linear-gradient(135deg, rgba(255, 215, 0, 0.15), rgba(255, 215, 0, 0.25));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .stat-icon::after {
+      content: '';
+      position: absolute;
+      top: -2px;
+      left: -2px;
+      right: -2px;
+      bottom: -2px;
+      background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+      border-radius: 15px;
+      z-index: -1;
+      opacity: 0.3;
+    }
+
+    .stat-icon i {
+      font-size: 24px;
+      background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .stat-info h4 {
+      margin: 0 0 5px;
+      font-size: 12px;
+      color: var(--text-muted);
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .stat-info p {
+      margin: 0;
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    /* Market Trend Card - Live */
+    .market-trend-card {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      width: 100%;
+    }
+
+    .trend-info {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .trend-value {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .trend-change {
+      font-size: 14px;
+      font-weight: 600;
+      padding: 3px 6px;
+      border-radius: 5px;
+    }
+
+    .trend-change.positive {
+      color: var(--primary-color);
+      background: rgba(255, 215, 0, 0.1);
+    }
+
+    .trend-change.negative {
+      color: #ff4d4d;
+      background: rgba(255, 77, 77, 0.1);
+    }
+
+    .trend-stats {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .trend-stat {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .trend-stat-label {
+      font-size: 10px;
+      color: var(--text-muted);
+    }
+
+    .trend-stat-value {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .trend-chart-container {
+      margin-top: 10px;
+      height: 120px;
+      position: relative;
+    }
+
+    /* GRID */
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 380px;
+      gap: 25px;
+      transition: all 0.3s ease;
+    }
+
+    /* CARDS */
+    .card {
+      background: var(--card-bg);
+      backdrop-filter: blur(20px);
+      padding: 25px;
+      border-radius: 20px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+      margin-bottom: 25px;
+      transition: var(--transition);
+      user-select: none;
+      border: 1px solid var(--border-color);
+      position: relative;
+      overflow: hidden;
+    }
+
+    [data-theme="light"] .card {
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background: linear-gradient(90deg, var(--primary-color), var(--primary-dark));
+      transform: scaleX(0);
+      transition: transform 0.3s ease;
+    }
+
+    .card:hover::before,
+    .card:focus-within::before {
+      transform: scaleX(1);
+    }
+
+    .card:hover,
+    .card:focus-within {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+    }
+
+    [data-theme="light"] .card:hover,
+    [data-theme="light"] .card:focus-within {
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+    }
+
+    .card h3,
+    .card h4 {
+      margin: 0 0 15px;
+      font-weight: 600;
+      color: var(--text-primary);
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 12px;
+      display: flex;
+      align-items: center;
+      font-size: 18px;
+      user-select: text;
+    }
+
+    .card h3 i,
+    .card h4 i {
+      margin-right: 10px;
+      color: var(--primary-color);
+      font-size: 20px;
+    }
+
+    /* LINKS inside cards */
+    .card a {
+      color: var(--primary-color);
+      text-decoration: none;
+      font-weight: 600;
+      display: inline-flex;
+      gap: 6px;
+      align-items: center;
+      transition: var(--transition);
+    }
+
+    .card a:hover,
+    .card a:focus {
+      color: var(--primary-dark);
+      transform: scale(1.05);
+      outline: none;
+    }
+
+    /* BUTTONS */
+    .btn {
+      padding: 10px 18px;
+      background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+      color: #fff;
+      border-radius: 10px;
+      text-decoration: none;
+      font-weight: 600;
+      transition: var(--transition);
+      cursor: pointer;
+      user-select: none;
+      border: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 8px 20px rgba(255, 215, 0, 0.3);
+      position: relative;
+      overflow: hidden;
+      font-size: 14px;
+    }
+
+    .btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.2);
+      transition: left 0.5s ease;
+    }
+
+    .btn:hover::before {
+      left: 100%;
+    }
+
+    .btn:hover,
+    .btn:focus {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 25px rgba(255, 215, 0, 0.4);
+      outline: none;
+    }
+
+    /* MODALS */
+    .modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.8);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      visibility: hidden;
+      opacity: 0;
+      transition: visibility 0s 0.3s, opacity 0.3s ease;
+      z-index: 1000;
+      user-select: none;
+    }
+
+    [data-theme="light"] .modal {
+      background: rgba(0, 0, 0, 0.5);
+    }
+
+    .modal.show {
+      visibility: visible;
+      opacity: 1;
+      transition-delay: 0s;
+    }
+
+    .modal-content {
+      background: var(--card-bg);
+      backdrop-filter: blur(20px);
+      padding: 30px;
+      border-radius: 20px;
+      text-align: center;
+      max-width: 350px;
+      width: 90%;
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+      user-select: text;
+      outline: none;
+      border: 1px solid var(--border-color);
+    }
+
+    [data-theme="light"] .modal-content {
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+    }
+
+    .modal-content h3 {
+      margin: 0 0 15px;
+      color: var(--text-primary);
+      font-size: 20px;
+    }
+
+    .modal-content p {
+      margin-bottom: 20px;
+      color: var(--text-secondary);
+      font-size: 16px;
+    }
+
+    .modal-content .btn {
+      margin: 8px;
+    }
+
+    /* ZestPay Loader */
+    .loading {
+      display: flex;
+      justify-content: center;
+      gap: 4px;
+      margin-bottom: 15px;
+      user-select: none;
+    }
+
+    .loading span {
+      display: inline-block;
+      font-size: 24px;
+      font-weight: bold;
+      color: var(--primary-color);
+      animation: bounce 1.2s infinite;
+    }
+
+    .loading span:nth-child(2) {
+      animation-delay: 0.2s;
+    }
+
+    .loading span:nth-child(3) {
+      animation-delay: 0.4s;
+    }
+
+    .loading span:nth-child(4) {
+      animation-delay: 0.6s;
+    }
+
+    .loading span:nth-child(5) {
+      animation-delay: 0.8s;
+    }
+
+    .loading span:nth-child(6) {
+      animation-delay: 1s;
+    }
+
+    .loading span:nth-child(7) {
+      animation-delay: 1.2s;
+    }
+
+    @keyframes bounce {
+      0%,
+      80%,
+      100% {
+        transform: scale(0.8);
+        opacity: 0.5;
+      }
+
+      40% {
+        transform: scale(1.3);
+        opacity: 1;
+      }
+    }
+
+    /* Global full-screen loader */
+    #globalLoader {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.9);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      visibility: hidden;
+      opacity: 0;
+      transition: 0.3s ease;
+      z-index: 2000;
+      user-select: none;
+    }
+
+    [data-theme="light"] #globalLoader {
+      background: rgba(255, 255, 255, 0.9);
+    }
+
+    #globalLoader.show {
+      visibility: visible;
+      opacity: 1;
+    }
+
+    /* Profile Info */
+    .profile-info {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .profile-info p {
+      margin: 0;
+      display: flex;
+      justify-content: space-between;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border-color);
+      font-size: 14px;
+    }
+
+    .profile-info p:last-child {
+      border-bottom: none;
+    }
+
+    .profile-info strong {
+      color: var(--primary-color);
+      font-weight: 600;
+    }
+
+    /* Quick Actions */
+    .quick-actions {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+
+    .quick-action {
+      background: rgba(255, 215, 0, 0.1);
+      border: 1px solid rgba(255, 215, 0, 0.2);
+      border-radius: 15px;
+      padding: 15px;
+      text-align: center;
+      transition: var(--transition);
+      cursor: pointer;
+    }
+
+    .quick-action:hover {
+      background: rgba(255, 215, 0, 0.2);
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(255, 215, 0, 0.2);
+    }
+
+    .quick-action i {
+      font-size: 24px;
+      color: var(--primary-color);
+      margin-bottom: 8px;
+      display: block;
+    }
+
+    .quick-action span {
+      display: block;
+      font-size: 14px;
+      color: var(--text-primary);
+      font-weight: 500;
+    }
+
+    /* Activity Feed */
+    .activity-feed {
+      max-height: 250px;
+      overflow-y: auto;
+    }
+
+    .activity-item {
+      display: flex;
+      align-items: start;
+      gap: 12px;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border-color);
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+
+    .activity-item:hover {
+      background: rgba(255, 215, 0, 0.05);
+    }
+
+    .activity-item:last-child {
+      border-bottom: none;
+    }
+
+    .activity-icon {
+      width: 35px;
+      height: 35px;
+      border-radius: 50%;
+      background: rgba(255, 215, 0, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .activity-icon i {
+      font-size: 16px;
+      color: var(--primary-color);
+    }
+
+    .activity-content {
+      flex: 1;
+    }
+
+    .activity-content h5 {
+      margin: 0 0 3px;
+      font-size: 13px;
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+
+    .activity-content p {
+      margin: 0;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .activity-time {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    /* Market Rates Table */
+    .rates-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+
+    .rates-table th,
+    .rates-table td {
+      padding: 10px 12px;
+      text-align: left;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .rates-table th {
+      color: var(--primary-color);
+      font-weight: 600;
+      font-size: 12px;
+      text-transform: uppercase;
+    }
+
+    .rates-table td {
+      color: var(--text-primary);
+      font-size: 13px;
+    }
+
+    .rates-table tr:hover {
+      background: rgba(255, 215, 0, 0.05);
+    }
+
+    .rate-change {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      font-weight: 600;
+    }
+
+    .rate-change.positive {
+      color: var(--primary-color);
+    }
+
+    .rate-change.negative {
+      color: #ff4d4d;
+    }
+
+    /* Live indicator */
+    .live-indicator {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      font-size: 10px;
+      color: var(--text-muted);
+      margin-left: 8px;
+    }
+
+    .live-dot {
+      width: 6px;
+      height: 6px;
+      background: #4CAF50;
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0% {
+        box-shadow: 0 0 0 0 rgba(76, 175, 80, 0.7);
+      }
+      70% {
+        box-shadow: 0 0 0 8px rgba(76, 175, 80, 0);
+      }
+      100% {
+        box-shadow: 0 0 0 0 rgba(76, 175, 80, 0);
+      }
+    }
+
+    /* Security Score */
+    .security-score {
+      width: 100%;
+      height: 6px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 3px;
+      overflow: hidden;
+      margin-top: 8px;
+      position: relative;
+    }
+
+    [data-theme="light"] .security-score {
+      background: rgba(0, 0, 0, 0.1);
+    }
+
+    .score-bar {
+      width: 100%;
+      height: 100%;
+      position: relative;
+    }
+
+    .score-fill {
+      height: 100%;
+      width: 70%;
+      background: linear-gradient(90deg, #33cc33, #66ff66);
+      transition: width 1s ease;
+    }
+
+    .score-text {
+      position: absolute;
+      top: -20px;
+      right: 0;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    /* Data Sync Indicator */
+    .data-sync {
+      position: fixed;
+      bottom: 15px;
+      right: 15px;
+      background: var(--card-bg);
+      backdrop-filter: blur(10px);
+      border-radius: 10px;
+      padding: 10px 15px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+      border: 1px solid var(--border-color);
+      transform: translateY(100px);
+      opacity: 0;
+      transition: all 0.3s ease;
+      z-index: 100;
+    }
+
+    [data-theme="light"] .data-sync {
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .data-sync.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    .data-sync i {
+      color: var(--primary-color);
+    }
+
+    .data-sync span {
+      font-size: 12px;
+      color: var(--text-primary);
+    }
+
+    /* Responsive Design */
+    @media (max-width: 992px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+
+      .top {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      nav {
+        display: none;
+        position: absolute;
+        top: 60px;
+        left: 0;
+        right: 0;
+        background: var(--nav-bg);
+        flex-direction: column;
+        padding: 15px;
+        border-radius: 0 0 15px 15px;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+      }
+
+      [data-theme="light"] nav {
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+      }
+
+      nav.active {
+        display: flex;
+      }
+
+      nav a {
+        width: 100%;
+        padding: 12px 15px;
+        border-radius: 8px;
+        margin-bottom: 5px;
+      }
+
+      .menu-toggle {
+        display: block;
+      }
+      
+      .welcome-card {
+        flex-direction: column;
+        gap: 20px;
+        text-align: center;
+      }
+      
+      .welcome-actions {
+        justify-content: center;
+        width: 100%;
+      }
+      
+      .welcome-actions .btn {
+        flex: 1;
+        justify-content: center;
+      }
+      
+      .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 600px) {
+      .container {
+        padding: 15px;
+      }
+      
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .quick-actions {
+        grid-template-columns: 1fr;
+      }
+      
+      .top strong {
+        font-size: 20px;
+      }
+
+      .logo i {
+        font-size: 24px;
+      }
+
+      nav a {
+        font-size: 14px;
+        padding: 10px 12px;
+      }
+
+      .card {
+        padding: 20px;
+        border-radius: 15px;
+      }
+
+      .modal-content {
+        padding: 20px;
+        max-width: 90%;
+      }
+      
+      .welcome-info h2 {
+        font-size: 20px;
+      }
+      
+      .welcome-info p {
+        font-size: 14px;
+      }
+
+      .trend-chart-container {
+        height: 100px;
+      }
+
+      .stat-info p {
+        font-size: 18px;
+      }
+
+      .card h3, .card h4 {
+        font-size: 16px;
+      }
+
+      .card h3 i, .card h4 i {
+        font-size: 18px;
+      }
+
+      .profile-info p {
+        font-size: 13px;
+      }
+
+      .activity-feed {
+        max-height: 200px;
+      }
+
+      .rates-table th, .rates-table td {
+        padding: 8px 10px;
+        font-size: 12px;
+      }
+
+      .btn {
+        padding: 8px 15px;
+        font-size: 13px;
+      }
+
+      .welcome-actions .btn {
+        padding: 8px 15px;
+        font-size: 13px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .top {
+        padding: 10px 15px;
+      }
+
+      .container {
+        padding: 10px;
+      }
+
+      .welcome-card {
+        padding: 15px;
+      }
+
+      .card {
+        padding: 15px;
+      }
+
+      .stat-card {
+        padding: 15px;
+      }
+
+      .quick-action {
+        padding: 12px;
+      }
+
+      .modal-content {
+        padding: 15px;
+      }
+
+      .welcome-actions {
+        flex-direction: column;
+      }
+
+      .welcome-actions .btn {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Animated background elements -->
+  <div class="bg-shapes">
+    <div class="shape"></div>
+    <div class="shape"></div>
+    <div class="shape"></div>
+    <div class="shape"></div>
+  </div>
+
+  <!-- Top bar -->
+  <header class="top" role="banner">
+    <div class="logo">
+      <i class="fa-solid fa-bolt" aria-hidden="true"></i>
+      <strong>ZestPay</strong>
+    </div>
+    <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">
+      <i class="fa-solid fa-bars"></i>
+    </button>
+    <nav role="navigation" aria-label="Primary" id="mainNav">
+      <a href="/profile"><i class="fa-solid fa-user" aria-hidden="true"></i> Profile</a>
+      <a href="/settings"><i class="fa-solid fa-gear" aria-hidden="true"></i> Settings</a>
+      <a href="/rates"><i class="fa-solid fa-chart-line" aria-hidden="true"></i> Rates</a>
+      <a href="/cards"><i class="fa-solid fa-credit-card" aria-hidden="true"></i> Cards</a>
+      <a href="/roadmap"><i class="fa-soild fa-credit-card" aria-hidden="true"></i>Roadmap</a>
+      <a href="#" id="logoutBtn" role="button" aria-haspopup="dialog"><i class="fa-solid fa-right-from-bracket" aria-hidden="true"></i>
+        Logout</a>
+      
+      <!-- Theme Toggle -->
+      <div class="theme-toggle" id="themeToggle" role="button" aria-label="Toggle theme" tabindex="0">
+        <div class="theme-toggle-slider">
+          <i class="fa-solid fa-credit-card" id="themeIcon"></i>
+        </div>
+      </div>
+    </nav>
+    
+    <!-- Bootstrap Navigation Controls -->
+    <div class="d-flex gap-2 align-items-center">
+      <button type="button" class="btn btn-sm btn-outline-light" id="refreshBtn" title="Refresh">
+        <i class="fa-solid fa-sync-alt"></i>
+      </button>
+    </div>
+  </header>
+
+  <!-- Main container -->
+  <main class="container" role="main">
+    <!-- Welcome Section -->
+    <section class="welcome-section" aria-label="Welcome message">
+      <div class="welcome-card">
+        <div class="welcome-info">
+          <h2 id="welcome">Welcome back!</h2>
+          <p>Here's what's happening with your account today.</p>
+        </div>
+        <div class="welcome-actions">
+          <a href="/settings" class="btn"><i class="fa-solid fa-gear"></i> Settings</a>
+          <a href="/rates" class="btn btn-secondary"><i class="fa-solid fa-chart-line"></i> Rates</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="stats-grid" aria-label="Account statistics">
+      <div class="stat-card">
+        <div class="stat-icon">
+          <i class="fa-solid fa-chart-line"></i>
+        </div>
+        <div class="stat-info market-trend-card">
+          <h4>Market Trend
+            <span class="live-indicator">
+              <span class="live-dot"></span>
+              LIVE
+            </span>
+          </h4>
+          <div class="trend-info">
+            <span class="trend-value" id="marketValue">$0.00</span>
+            <span class="trend-change" id="marketChange">+0.00%</span>
+          </div>
+          <div class="trend-stats">
+            <div class="trend-stat">
+              <span class="trend-stat-label">24h High</span>
+              <span class="trend-stat-value" id="marketHigh">$0.00</span>
+            </div>
+            <div class="trend-stat">
+              <span class="trend-stat-label">24h Low</span>
+              <span class="trend-stat-value" id="marketLow">$0.00</span>
+            </div>
+            <div class="trend-stat">
+              <span class="trend-stat-label">Volume</span>
+              <span class="trend-stat-value" id="marketVolume">$0</span>
+            </div>
+            <div class="trend-stat">
+              <span class="trend-stat-label">Market Cap</span>
+              <span class="trend-stat-value" id="marketCap">$0</span>
+            </div>
+          </div>
+          <div class="trend-chart-container">
+            <canvas id="marketChart"></canvas>
+          </div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">
+          <i class="fa-solid fa-exchange-alt"></i>
+        </div>
+        
+        <div class="stat-info">
+          <h4>Transactions</h4>
+          <p id="transactionCount">0</p>
+        </div>
+        
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">
+          <i class="fa-solid fa-shield-halved"></i>
+        </div>
+        <div class="stat-info">
+          <h4>Security Score</h4>
+          <div class="security-score">
+            <div class="score-bar">
+              <div class="score-fill" id="securityScore"></div>
+            </div>
+            <div class="score-text" id="securityScoreText">70%</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="grid">
+      <!-- Left side -->
+      <section aria-label="User Account Information">
+        <div class="card" tabindex="0" aria-live="polite" aria-relevant="additions">
+          <h3><i class="fa-solid fa-id-card" aria-hidden="true"></i> Account Information</h3>
+          <div id="accountInfo" class="profile-box">
+            <p>Loading profile...</p>
+          </div>
+        </div>
+
+        <div class="card" tabindex="0">
+          <h3><i class="fa-solid fa-chart-line" aria-hidden="true"></i> Market Rates</h3>
+          <div class="rates-table-container">
+            <table class="rates-table">
+              <thead>
+                <tr>
+                  <th>Currency</th>
+                  <th>Price (USD)</th>
+                  <th>24h Change</th>
+                </tr>
+              </thead>
+              <tbody id="ratesTableBody">
+                <tr>
+                  <td colspan="3">Loading market rates...</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="card" tabindex="0">
+          <h3><i class="fa-solid fa-credit-card" aria-hidden="true"></i> Card Management</h3>
+          <p>💳 Manage your virtual and physical cards coming soon.</p>
+        </div>
+      </section>
+
+      <!-- Right side -->
+      <aside aria-label="Quick actions and profile summary">
+        <div class="card" tabindex="0">
+          <h4><i class="fa-solid fa-bolt" aria-hidden="true"></i> Quick Actions</h4>
+          <div class="quick-actions">
+            <div class="quick-action">
+                <i class="fa-solid fa-clock-rotate-left"></i>
+              <a href="/history">
+                <span>History</span>
+            </div>
+        </a>
+            <div class="quick-action">
+             
+                <i class="fa-solid fa-shield-halved"></i>
+             
+              <span>Security</span>
+            </div>
+        
+            <div class="quick-action">
+              <i class="fa-solid fa-headset"></i>
+              <a href="/profile">
+              <span>Support</span>
+            </div>
+          </div>
+        </div>
+    </a>
+
+        <div class="card" tabindex="0" aria-live="polite" aria-relevant="additions">
+          <h4><i class="fa-solid fa-user-circle" aria-hidden="true"></i> Profile Summary</h4>
+          <div id="profileSummary">Loading...</div>
+        </div>
+
+        <div class="card" tabindex="0">
+          <h4><i class="fa-solid fa-bell" aria-hidden="true"></i> Recent Activity</h4>
+          <div class="activity-feed" id="activityFeed">
+            <div class="activity-item">
+              <div class="activity-icon">
+                <i class="fa-solid fa-check"></i>
+              </div>
+              <div class="activity-content">
+                <h5>Account Created</h5>
+                <p>Welcome to ZestPay!</p>
+                <span class="activity-time">Just now</span>
+              </div>
+            </div>
+            <div class="activity-item">
+              <div class="activity-icon">
+                <i class="fa-solid fa-shield-halved"></i>
+              </div>
+              <div class="activity-content">
+                <h5>Security Enabled</h5>
+                <p>Your account is protected</p>
+                <span class="activity-time">Just now</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </main>
+
+  <!-- Logout Modal -->
+  <div id="logoutModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="logoutTitle" aria-describedby="logoutDesc"
+    tabindex="-1">
+    <div class="modal-content" id="modalContent">
+      <h3 id="logoutTitle">Logout</h3>
+      <p id="logoutDesc">Are you sure you want to logout?</p>
+      <button class="btn" onclick="confirmLogout()" aria-label="Confirm logout">Yes</button>
+      <button class="btn" style="background:#777;" onclick="closeModal()" aria-label="Cancel logout">Cancel</button>
+    </div>
+  </div>
+
+  <!-- Global Loader -->
+  <div id="globalLoader" aria-live="assertive" aria-busy="true" role="alert" aria-label="Loading">
+    <div class="loading" aria-hidden="true">
+      <span>Z</span><span>E</span><span>S</span><span>T</span><span>P</span><span>A</span><span>Y</span>
+    </div>
+  </div>
+
+  <!-- No Internet Modal -->
+  <div id="offlineModal" class="modal" role="alertdialog" aria-modal="true" aria-labelledby="offlineTitle" aria-describedby="offlineDesc"
+    tabindex="-1">
+    <div class="modal-content">
+      <h3 id="offlineTitle" style="color:red;">
+        <i class="fa-solid fa-wifi" aria-hidden="true"></i> No Internet
+      </h3>
+      <p id="offlineDesc">No Internet Connection.</p>
+      <button class="btn" onclick="closeOffline()" aria-label="Close no internet modal">OK</button>
+    </div>
+  </div>
+
+  <!-- Data Sync Indicator -->
+  <div id="dataSync" class="data-sync">
+    <i class="fa-solid fa-sync fa-spin"></i>
+    <span>Syncing data...</span>
+  </div>
+
+  <!-- Toast Container for Bootstrap Notifications -->
+  <div class="toast-container"></div>
+
+  <script>
+    // Theme Management System
+    const ThemeManager = {
+      init: function() {
+        // Get user ID from the page (we'll need to add this to the page)
+        const userId = this.getCurrentUserId();
+        
+        // Load user-specific theme preference
+        const savedTheme = this.getUserTheme(userId) || 'dark';
+        this.setTheme(savedTheme);
+        
+        // Add event listener to theme toggle
+        const themeToggle = document.getElementById('themeToggle');
+        themeToggle.addEventListener('click', () => this.toggleTheme());
+        
+        // Add keyboard support
+        themeToggle.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            this.toggleTheme();
+          }
+        });
+      },
+      
+      getCurrentUserId: function() {
+        // Try to get user ID from the page
+        // This could be from a global variable, meta tag, or other element
+        return window.currentUserId || 'default';
+      },
+      
+      getUserTheme: function(userId) {
+        try {
+          const userData = JSON.parse(localStorage.getItem(`zestpay_theme_${userId}`)) || {};
+          return userData.theme;
+        } catch (e) {
+          console.error("Error getting user theme:", e);
+          return null;
+        }
+      },
+      
+      setUserTheme: function(userId, theme) {
+        try {
+          const userData = JSON.parse(localStorage.getItem(`zestpay_theme_${userId}`)) || {};
+          userData.theme = theme;
+          localStorage.setItem(`zestpay_theme_${userId}`, JSON.stringify(userData));
+          return true;
+        } catch (e) {
+          console.error("Error saving user theme:", e);
+          return false;
+        }
+      },
+      
+      setTheme: function(theme) {
+        document.documentElement.setAttribute('data-theme', theme);
+        
+        // Update icon
+        const themeIcon = document.getElementById('themeIcon');
+        if (theme === 'light') {
+          themeIcon.className = 'fa-solid fa-wallet';
+        } else {
+          themeIcon.className = 'fa-solid fa-credit-card';
+        }
+      },
+      
+      toggleTheme: function() {
+        const currentTheme = document.documentElement.getAttribute('data-theme');
+        const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+        const userId = this.getCurrentUserId();
+        
+        this.setTheme(newTheme);
+        this.setUserTheme(userId, newTheme);
+        
+        // Show toast notification
+        showToast('Theme Changed', `Switched to ${newTheme} mode`, 'success');
+        
+        // Update chart colors if chart exists
+        if (window.marketChart) {
+          updateChartTheme();
+        }
+      }
+    };
+    
+    // Data Management System - Shared across all pages
+    const ZestPayData = {
+      // Initialize data storage
+      init: function() {
+        // Check if localStorage is available
+        if (typeof(Storage) === "undefined") {
+          console.error("localStorage is not supported");
+          return false;
+        }
+        
+        // Get current user ID
+        const userId = this.getCurrentUserId();
+        
+        // Initialize data structure if not exists
+        if (!localStorage.getItem(`zestpay_data_${userId}`)) {
+          const initialData = {
+            user: null,
+            marketRates: null,
+            lastUpdated: null,
+            settings: {
+              theme: ThemeManager.getUserTheme(userId) || 'dark',
+              language: 'en',
+              notifications: {
+                email: true,
+                sms: false,
+                push: true
+              }
+            }
+          };
+          localStorage.setItem(`zestpay_data_${userId}`, JSON.stringify(initialData));
+        }
+        
+        return true;
+      },
+      
+      getCurrentUserId: function() {
+        // Try to get user ID from the page
+        return window.currentUserId || 'default';
+      },
+      
+      // Get all data
+      getAllData: function() {
+        try {
+          const userId = this.getCurrentUserId();
+          return JSON.parse(localStorage.getItem(`zestpay_data_${userId}`)) || {};
+        } catch (e) {
+          console.error("Error parsing data from localStorage", e);
+          return {};
+        }
+      },
+      
+      // Save all data
+      saveAllData: function(data) {
+        try {
+          const userId = this.getCurrentUserId();
+          localStorage.setItem(`zestpay_data_${userId}`, JSON.stringify(data));
+          return true;
+        } catch (e) {
+          console.error("Error saving data to localStorage", e);
+          return false;
+        }
+      },
+      
+      // Get user data
+      getUser: function() {
+        const data = this.getAllData();
+        return data.user;
+      },
+      
+      // Save user data
+      saveUser: function(userData) {
+        const data = this.getAllData();
+        data.user = userData;
+        data.lastUpdated = new Date().toISOString();
+        return this.saveAllData(data);
+      },
+      
+      // Get market rates
+      getMarketRates: function() {
+        const data = this.getAllData();
+        return data.marketRates;
+      },
+      
+      // Save market rates
+      saveMarketRates: function(marketData) {
+        const data = this.getAllData();
+        data.marketRates = marketData;
+        data.lastUpdated = new Date().toISOString();
+        return this.saveAllData(data);
+      },
+      
+      // Get settings
+      getSettings: function() {
+        const data = this.getAllData();
+        return data.settings;
+      },
+      
+      // Save settings
+      saveSettings: function(settings) {
+        const data = this.getAllData();
+        data.settings = settings;
+        data.lastUpdated = new Date().toISOString();
+        return this.saveAllData(data);
+      },
+      
+      // Check if data needs refresh (older than 5 minutes)
+      needsRefresh: function() {
+        const data = this.getAllData();
+        if (!data.lastUpdated) return true;
+        
+        const lastUpdated = new Date(data.lastUpdated);
+        const now = new Date();
+        const diffMinutes = (now - lastUpdated) / (1000 * 60);
+        
+        return diffMinutes > 5; // Refresh if data is older than 5 minutes
+      },
+      
+      // Clear all data (for logout)
+      clearAllData: function() {
+        try {
+          const userId = this.getCurrentUserId();
+          localStorage.removeItem(`zestpay_data_${userId}`);
+          return true;
+        } catch (e) {
+          console.error("Error clearing data from localStorage", e);
+          return false;
+        }
+      }
+    };
+    
+    // Profile loading
+    let currentUser = null;
+    let marketChart = null;
+    let marketUpdateInterval = null;
+    
+    // Initialize theme and data management systems
+    ThemeManager.init();
+    ZestPayData.init();
+    
+    // Mobile menu toggle
+    document.getElementById('menuToggle').addEventListener('click', function() {
+      document.getElementById('mainNav').classList.toggle('active');
+    });
+    
+    // Close mobile menu when clicking outside
+    document.addEventListener('click', function(event) {
+      const nav = document.getElementById('mainNav');
+      const menuToggle = document.getElementById('menuToggle');
+      
+      if (!nav.contains(event.target) && !menuToggle.contains(event.target)) {
+        nav.classList.remove('active');
+      }
+    });
+    
+    // Show data sync indicator
+    function showDataSync(message = "Syncing data...") {
+      const syncIndicator = document.getElementById('dataSync');
+      syncIndicator.querySelector('span').textContent = message;
+      syncIndicator.classList.add('show');
+    }
+    
+    // Hide data sync indicator
+    function hideDataSync() {
+      const syncIndicator = document.getElementById('dataSync');
+      syncIndicator.classList.remove('show');
+    }
+    
+    // Show Bootstrap toast notification
+    function showToast(title, message, type = 'info') {
+      const toastContainer = document.querySelector('.toast-container');
+      const toastId = 'toast-' + Date.now();
+      
+      const toastHtml = `
+        <div id="${toastId}" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+          <div class="toast-header">
+            <i class="fa-solid fa-${type === 'success' ? 'check-circle text-success' : type === 'error' ? 'exclamation-circle text-danger' : 'info-circle text-info'} me-2"></i>
+            <strong class="me-auto">${title}</strong>
+            <small>Just now</small>
+            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+          </div>
+          <div class="toast-body">
+            ${message}
+          </div>
+        </div>
+      `;
+      
+      toastContainer.insertAdjacentHTML('beforeend', toastHtml);
+      
+      const toastElement = document.getElementById(toastId);
+      const toast = new bootstrap.Toast(toastElement, {
+        autohide: true,
+        delay: 3000
+      });
+      
+      toast.show();
+      
+      // Remove from DOM after hidden
+      toastElement.addEventListener('hidden.bs.toast', function() {
+        toastElement.remove();
+      });
+    }
+    
+    // Load profile data from API or cache
+    async function loadProfile() {
+      try {
+        // Check if we have cached data and it doesn't need refresh
+        const cachedUser = ZestPayData.getUser();
+        if (cachedUser && !ZestPayData.needsRefresh()) {
+          console.log("Using cached user data");
+          updateUIWithUserData(cachedUser);
+          return;
+        }
+        
+        // Show sync indicator
+        showDataSync("Loading profile...");
+        
+        // Fetch fresh data from API
+        const res = await fetch('/api/profile');
+        if (res.status === 401) {
+          window.location.href = '/login';
+          return;
+        }
+        const j = await res.json();
+        if (j.status !== 'ok') {
+          document.getElementById('accountInfo').innerText = 'Could not load profile';
+          hideDataSync();
+          return;
+        }
+        
+        // Save to cache
+        ZestPayData.saveUser(j);
+        
+        // Update UI
+        updateUIWithUserData(j);
+        
+        // Hide sync indicator
+        hideDataSync();
+      } catch (e) {
+        console.error("Error loading profile:", e);
+        
+        // Try to use cached data if available
+        const cachedUser = ZestPayData.getUser();
+        if (cachedUser) {
+          console.log("Using cached data due to network error");
+          updateUIWithUserData(cachedUser);
+          hideDataSync();
+          return;
+        }
+        
+        document.getElementById('accountInfo').innerText = 'Could not load profile';
+        hideDataSync();
+      }
+    }
+    
+    // Update UI with user data
+    function updateUIWithUserData(data) {
+      const p = data.profile || data;
+      currentUser = p;
+      const name = (p.firstName || p.email).trim();
+      document.getElementById('welcome').textContent = 'Welcome back, ' + name + '!';
+      
+      // Store user ID for theme management
+      window.currentUserId = p.id || p.email || 'default';
+      
+      // Use member_since from backend
+      const memberSince = p.member_since || new Date(p.created_at).toLocaleDateString('en-US', { 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric' 
+      });
+      
+      document.getElementById('accountInfo').innerHTML = `
+        <div class="profile-info">
+          <p><strong>Full Name:</strong> ${p.firstName || '-'} ${p.lastName || ''}</p>
+          <p><strong>Email Address:</strong> ${p.email}</p>
+          <p><strong>Phone Number:</strong> ${p.phone || '-'}</p>
+          <p><strong>Referral Code:</strong> ${p.referral || '-'}</p>
+          <p><strong>Member Since:</strong> ${memberSince}</p>
+        </div>
+      `;
+      document.getElementById('profileSummary').innerHTML = `
+        <div class="profile-info">
+          <p><strong>${p.firstName || p.email}</strong></p>
+          <p>${p.email}</p>
+          <p><strong>Member Since:</strong> ${memberSince}</p>
+          <p><strong>Account Status:</strong> <span style="color: var(--primary-color);">Active</span></p>
+        </div>
+      `;
+      
+      // Update transaction count
+      document.getElementById('transactionCount').textContent = p.transaction_count || 0;
+      
+      // Update security score
+      updateSecurityScore(p.security_score || 70);
+      
+      // Update activity feed
+      updateActivityFeed(data.activities || []);
+    }
+    
+    // Update security score visualization
+    function updateSecurityScore(score) {
+      const scoreFill = document.getElementById('securityScore');
+      const scoreText = document.getElementById('securityScoreText');
+      
+      scoreFill.style.width = `${score}%`;
+      scoreText.textContent = `${score}%`;
+      
+      // Change color based on score
+      if (score < 50) {
+        scoreFill.style.background = 'linear-gradient(90deg, #ff4d4d, #ff8080)';
+      } else if (score < 80) {
+        scoreFill.style.background = 'linear-gradient(90deg, #ff9933, var(--primary-color))';
+      } else {
+        scoreFill.style.background = 'linear-gradient(90deg, #33cc33, #66ff66)';
+      }
+    }
+    
+    // Update activity feed
+    function updateActivityFeed(activities) {
+      const feedContainer = document.getElementById('activityFeed');
+      
+      if (!activities || activities.length === 0) {
+        feedContainer.innerHTML = '<p style="text-align: center; color: var(--text-muted);">No recent activity</p>';
+        return;
+      }
+      
+      feedContainer.innerHTML = activities.map(activity => {
+        const icon = getActivityIcon(activity.type);
+        const time = formatActivityTime(activity.created_at);
+        
+        return `
+          <div class="activity-item">
+            <div class="activity-icon">
+              <i class="fa-solid ${icon}"></i>
+            </div>
+            <div class="activity-content">
+              <h5>${activity.type.charAt(0).toUpperCase() + activity.type.slice(1)}</h5>
+              <p>${activity.description}</p>
+              <span class="activity-time">${time}</span>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+    
+    // Get appropriate icon for activity type
+    function getActivityIcon(type) {
+      const icons = {
+        'login': 'fa-sign-in-alt',
+        'transaction': 'fa-exchange-alt',
+        'profile_update': 'fa-user-edit',
+        'security_update': 'fa-shield-halved',
+        'password_change': 'fa-key',
+        'email_verification': 'fa-envelope-check',
+        'account_created': 'fa-user-plus'
+      };
+      
+      return icons[type] || 'fa-circle';
+    }
+    
+    // Format activity time
+    function formatActivityTime(timestamp) {
+      const date = new Date(timestamp);
+      const now = new Date();
+      const diffMs = now - date;
+      const diffMins = Math.floor(diffMs / 60000);
+      
+      if (diffMins < 1) return 'Just now';
+      if (diffMins < 60) return `${diffMins} minute${diffMins > 1 ? 's' : ''} ago`;
+      
+      const diffHours = Math.floor(diffMins / 60);
+      if (diffHours < 24) return `${diffHours} hour${diffHours > 1 ? 's' : ''} ago`;
+      
+      const diffDays = Math.floor(diffHours / 24);
+      if (diffDays < 7) return `${diffDays} day${diffDays > 1 ? 's' : ''} ago`;
+      
+      return date.toLocaleDateString();
+    }
+    
+    // Load market rates with live updates
+    async function loadMarketRates() {
+      try {
+        // Check if we have cached data and it doesn't need refresh
+        const cachedRates = ZestPayData.getMarketRates();
+        if (cachedRates && !ZestPayData.needsRefresh()) {
+          console.log("Using cached market rates");
+          updateUIWithMarketData(cachedRates);
+          return;
+        }
+        
+        // Show sync indicator
+        showDataSync("Loading market rates...");
+        
+        // Fetch fresh data from API
+        const res = await fetch('/api/market-rates');
+        const data = await res.json();
+        
+        if (data.status !== 'ok') {
+          document.getElementById('ratesTableBody').innerHTML = '<tr><td colspan="3">Failed to load market rates</td></tr>';
+          hideDataSync();
+          return;
+        }
+        
+        // Save to cache
+        ZestPayData.saveMarketRates(data);
+        
+        // Update UI
+        updateUIWithMarketData(data);
+        
+        // Hide sync indicator
+        hideDataSync();
+      } catch (e) {
+        console.error("Error loading market rates:", e);
+        
+        // Try to use cached data if available
+        const cachedRates = ZestPayData.getMarketRates();
+        if (cachedRates) {
+          console.log("Using cached market rates due to network error");
+          updateUIWithMarketData(cachedRates);
+          hideDataSync();
+          return;
+        }
+        
+        document.getElementById('ratesTableBody').innerHTML = '<tr><td colspan="3">Failed to load market rates</td></tr>';
+        hideDataSync();
+      }
+    }
+    
+    // Update UI with market data
+    function updateUIWithMarketData(data) {
+      const rates = data.rates;
+      const tableBody = document.getElementById('ratesTableBody');
+      
+      tableBody.innerHTML = rates.map(rate => {
+        const changeClass = rate.change_24h >= 0 ? 'positive' : 'negative';
+        const changeIcon = rate.change_24h >= 0 ? 'fa-arrow-up' : 'fa-arrow-down';
+        
+        return `
+          <tr>
+            <td>${rate.currency}</td>
+            <td>$${rate.rate_to_usd.toFixed(2)}</td>
+            <td>
+              <span class="rate-change ${changeClass}">
+                <i class="fa-solid ${changeIcon}"></i>
+                ${Math.abs(rate.change_24h).toFixed(2)}%
+              </span>
+            </td>
+          </tr>
+        `;
+      }).join('');
+      
+      // Update market trend with first currency
+      if (rates.length > 0) {
+        const firstRate = rates[0];
+        document.getElementById('marketValue').textContent = `$${firstRate.rate_to_usd.toFixed(2)}`;
+        
+        const changeElement = document.getElementById('marketChange');
+        changeElement.textContent = `${firstRate.change_24h >= 0 ? '+' : ''}${firstRate.change_24h.toFixed(2)}%`;
+        changeElement.className = `trend-change ${firstRate.change_24h >= 0 ? 'positive' : 'negative'}`;
+        
+        // Update additional market stats
+        document.getElementById('marketHigh').textContent = `$${(firstRate.high_24h || firstRate.rate_to_usd * 1.05).toFixed(2)}`;
+        document.getElementById('marketLow').textContent = `$${(firstRate.low_24h || firstRate.rate_to_usd * 0.95).toFixed(2)}`;
+        document.getElementById('marketVolume').textContent = formatLargeNumber(firstRate.volume_24h || 0);
+        document.getElementById('marketCap').textContent = formatLargeNumber(firstRate.market_cap || 0);
+        
+        // Update chart with sparkline data or generate it
+        updateMarketChart(firstRate);
+      }
+    }
+    
+    // Update market chart with live data
+    function updateMarketChart(rate) {
+      const ctx = document.getElementById('marketChart').getContext('2d');
+      const isDarkMode = document.documentElement.getAttribute('data-theme') === 'dark';
+      
+      // Generate labels for the last 7 days
+      const labels = [];
+      const data = [];
+      const now = new Date();
+      
+      // Use sparkline data if available, otherwise generate it
+      if (rate.sparkline && rate.sparkline.length > 0) {
+        // Use the sparkline data from the API
+        rate.sparkline.forEach((price, index) => {
+          const date = new Date(now);
+          date.setDate(date.getDate() - (rate.sparkline.length - index - 1));
+          labels.push(date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }));
+          data.push(price);
+        });
+      } else {
+        // Generate sample data based on current rate
+        for (let i = 6; i >= 0; i--) {
+          const date = new Date(now);
+          date.setDate(date.getDate() - i);
+          labels.push(date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }));
+          
+          // Generate realistic variation around current rate
+          const variation = rate.rate_to_usd * (0.95 + Math.random() * 0.1);
+          data.push(variation);
+        }
+        // Ensure the last data point matches the current rate
+        data[data.length - 1] = rate.rate_to_usd;
+      }
+      
+      if (marketChart) {
+        marketChart.destroy();
+      }
+      
+      marketChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: rate.currency + ' Price (USD)',
+            data: data,
+            borderColor: 'rgba(255, 215, 0, 0.8)',
+            backgroundColor: 'rgba(255, 215, 0, 0.1)',
+            borderWidth: 2,
+            fill: true,
+            tension: 0.4,
+            pointBackgroundColor: 'rgba(255, 215, 0, 1)',
+            pointBorderColor: isDarkMode ? '#fff' : '#000',
+            pointRadius: 3,
+            pointHoverRadius: 5
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              display: false
+            },
+            tooltip: {
+              mode: 'index',
+              intersect: false,
+              backgroundColor: isDarkMode ? 'rgba(26, 26, 26, 0.8)' : 'rgba(255, 255, 255, 0.8)',
+              titleColor: isDarkMode ? '#fff' : '#000',
+              bodyColor: isDarkMode ? '#fff' : '#000',
+              borderColor: 'rgba(255, 215, 0, 0.3)',
+              borderWidth: 1,
+              padding: 10,
+              displayColors: false,
+              callbacks: {
+                label: function(context) {
+                  return `$${context.parsed.y.toFixed(2)}`;
+                }
+              }
+            }
+          },
+          scales: {
+            x: {
+              grid: {
+                color: isDarkMode ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.05)'
+              },
+              ticks: {
+                color: isDarkMode ? '#aaa' : '#666',
+                maxRotation: 0,
+                autoSkip: true,
+                maxTicksLimit: 4
+              }
+            },
+            y: {
+              grid: {
+                color: isDarkMode ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.05)'
+              },
+              ticks: {
+                color: isDarkMode ? '#aaa' : '#666',
+                callback: function(value) {
+                  return '$' + value.toFixed(0);
+                }
+              }
+            }
+          },
+          animation: {
+            duration: 750
+          }
+        }
+      });
+      
+      // Store chart reference for theme updates
+      window.marketChart = marketChart;
+    }
+    
+    // Update chart theme
+    function updateChartTheme() {
+      if (window.marketChart) {
+        const isDarkMode = document.documentElement.getAttribute('data-theme') === 'dark';
+        
+        // Update grid colors
+        window.marketChart.options.scales.x.grid.color = isDarkMode ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.05)';
+        window.marketChart.options.scales.y.grid.color = isDarkMode ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.05)';
+        
+        // Update tick colors
+        window.marketChart.options.scales.x.ticks.color = isDarkMode ? '#aaa' : '#666';
+        window.marketChart.options.scales.y.ticks.color = isDarkMode ? '#aaa' : '#666';
+        
+        // Update tooltip colors
+        window.marketChart.options.plugins.tooltip.backgroundColor = isDarkMode ? 'rgba(26, 26, 26, 0.8)' : 'rgba(255, 255, 255, 0.8)';
+        window.marketChart.options.plugins.tooltip.titleColor = isDarkMode ? '#fff' : '#000';
+        window.marketChart.options.plugins.tooltip.bodyColor = isDarkMode ? '#fff' : '#000';
+        
+        // Update point border color
+        window.marketChart.data.datasets[0].pointBorderColor = isDarkMode ? '#fff' : '#000';
+        
+        // Update chart
+        window.marketChart.update();
+      }
+    }
+    
+    // Format large numbers (e.g., 1,500,000 -> $1.5M)
+    function formatLargeNumber(num) {
+      if (num >= 1e9) {
+        return `$${(num / 1e9).toFixed(1)}B`;
+      } else if (num >= 1e6) {
+        return `$${(num / 1e6).toFixed(1)}M`;
+      } else if (num >= 1e3) {
+        return `$${(num / 1e3).toFixed(1)}K`;
+      } else {
+        return `$${num.toFixed(2)}`;
+      }
+    }
+    
+    // Initial profile and market rates load
+    loadProfile();
+    loadMarketRates();
+    
+    // Set up live market updates every 30 seconds
+    marketUpdateInterval = setInterval(loadMarketRates, 30000);
+    
+    // Clean up interval on page unload
+    window.addEventListener('beforeunload', () => {
+      if (marketUpdateInterval) {
+        clearInterval(marketUpdateInterval);
+      }
+    });
+
+    // Logout modal logic
+    const logoutBtn = document.getElementById("logoutBtn");
+    const logoutModal = document.getElementById("logoutModal");
+    const modalContent = document.getElementById("modalContent");
+
+    logoutBtn.addEventListener("click", e => {
+      e.preventDefault();
+      if (!navigator.onLine) {
+        showOffline();
+        return;
+      }
+      logoutModal.classList.add("show");
+      logoutModal.focus();
+    });
+
+    function closeModal() {
+      logoutModal.classList.remove("show");
+      logoutBtn.focus();
+    }
+
+    function confirmLogout() {
+      modalContent.innerHTML = `
+        <div class="loading" aria-hidden="true">
+          <span>Z</span><span>E</span><span>S</span><span>T</span><span>P</span><span>A</span><span>Y</span>
+        </div>
+        <p style="color:#555;">Logging you out...</p>
+      `;
+      
+      // Clear cached data on logout
+      ZestPayData.clearAllData();
+      
+      setTimeout(() => {
+        window.location.href = "/login";
+      }, 2500);
+    }
+
+    // Global loader for links and buttons except logoutBtn
+    const globalLoader = document.getElementById("globalLoader");
+    document.querySelectorAll("a, .btn").forEach(el => {
+      el.addEventListener("click", function (e) {
+        const href = el.getAttribute("href");
+        if (href && href !== "#" && el.id !== "logoutBtn") {
+          if (!navigator.onLine) {
+            e.preventDefault();
+            showOffline();
+            return;
+          }
+          e.preventDefault();
+          showGlobalLoader();
+          setTimeout(() => {
+            window.location.href = href;
+          }, 2000);
+        }
+      });
+    });
+
+    // Show global loader with body lock
+    function showGlobalLoader() {
+      document.body.classList.add('loading-active');
+      globalLoader.classList.add("show");
+    }
+
+    // Hide global loader and unlock body
+    function hideGlobalLoader() {
+      document.body.classList.remove('loading-active');
+      globalLoader.classList.remove("show");
+    }
+
+    // Offline modal
+    const offlineModal = document.getElementById("offlineModal");
+    function showOffline() {
+      offlineModal.classList.add("show");
+      offlineModal.focus();
+    }
+    function closeOffline() {
+      offlineModal.classList.remove("show");
+      logoutBtn.focus();
+    }
+    
+    // Listen for storage events to sync data across tabs
+    window.addEventListener('storage', function(e) {
+      if (e.key && e.key.startsWith('zestpay_data_')) {
+        console.log("Data updated in another tab, refreshing...");
+        loadProfile();
+        loadMarketRates();
+      }
+    });
+    
+    // Add a periodic sync to ensure data is fresh
+    setInterval(() => {
+      if (document.visibilityState === 'visible') {
+        console.log("Periodic data sync");
+        loadProfile();
+        loadMarketRates();
+      }
+    }, 5 * 60 * 1000); // Sync every 5 minutes when page is visible
+    
+    // Bootstrap Refresh Button Functionality
+    document.getElementById('refreshBtn').addEventListener('click', function() {
+      // Add spinning animation to the refresh icon
+      const refreshIcon = this.querySelector('i');
+      refreshIcon.classList.add('fa-spin');
+      
+      // Show a toast notification
+      showToast('Refreshing', 'Updating dashboard data...', 'info');
+      
+      // Force refresh of all data
+      ZestPayData.clearAllData();
+      loadProfile();
+      loadMarketRates();
+      
+      // Remove spinning animation after a delay
+      setTimeout(() => {
+        refreshIcon.classList.remove('fa-spin');
+        showToast('Success', 'Dashboard data updated', 'success');
+      }, 2000);
+    });
+  </script>
+  
+  <!-- Bootstrap JS Bundle -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

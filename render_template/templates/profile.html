@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Profile - ZestPay</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+  body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    margin:0; padding:0;
+    background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    min-height:100vh;
+    color:#fff;
+  }
+
+  .card{
+    background: linear-gradient(145deg, #0f0f0f, #1a1a1a);
+    border-radius:20px;
+    max-width:600px;
+    width:90%;
+    padding:40px;
+    box-shadow:0 15px 35px rgba(0,0,0,0.7), 0 5px 15px rgba(0,0,0,0.5);
+    text-align:center;
+    color:#fff;
+    border: 1px solid rgba(212, 175, 55, 0.1);
+  }
+
+  .profile-pic{
+    width:130px; height:130px;
+    border-radius:50%;
+    background: linear-gradient(135deg, #1a1a1a, #222);
+    margin:0 auto 20px;
+    border:4px solid #d4af37;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-size:60px;
+    color:#d4af37;
+    transition: transform 0.3s, box-shadow 0.3s;
+    box-shadow: 0 8px 20px rgba(212, 175, 55, 0.3);
+  }
+  .profile-pic:hover{
+    transform: scale(1.05);
+    box-shadow: 0 0 30px rgba(212, 175, 55, 0.7);
+  }
+
+  h2{ 
+    font-size:28px; 
+    color:#d4af37; 
+    margin-bottom:25px; 
+    letter-spacing:1.5px;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+  }
+
+  #profileArea p{
+    font-size:17px; 
+    margin:12px 0; 
+    text-align:left;
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+  }
+  
+  #profileArea p:last-child {
+    border-bottom: none;
+  }
+
+  #profileArea strong {
+    color: #d4af37;
+    margin-right: 8px;
+  }
+
+  .btn-section{
+    display:flex; 
+    justify-content:center; 
+    margin-top:30px;
+  }
+  
+  .btn-section button{
+    background: linear-gradient(135deg, #d4af37, #b8860b); 
+    color:#fff; 
+    border:none; 
+    border-radius:12px;
+    padding:14px 28px; 
+    cursor:pointer; 
+    font-weight:600; 
+    display:flex; 
+    align-items:center; 
+    gap:10px;
+    transition:0.3s;
+    box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+    font-size: 16px;
+  }
+  
+  .btn-section button:hover{ 
+    background: linear-gradient(135deg, #b8860b, #9c7a0a);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4);
+  }
+
+  .support-icons{
+    display:flex; 
+    justify-content:center; 
+    gap:25px; 
+    margin-top:25px;
+  }
+  
+  .support-icons a{
+    display:flex; 
+    align-items:center; 
+    justify-content:center;
+    width:60px; 
+    height:60px;
+    border-radius:50%;
+    background: linear-gradient(135deg, #222, #2a2a2a); 
+    color:#d4af37;
+    font-size:28px;
+    transition:0.3s;
+    text-decoration:none;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+  }
+  
+  .support-icons a:hover{ 
+    background: linear-gradient(135deg, #d4af37, #b8860b); 
+    color:#000;
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(212, 175, 55, 0.4);
+  }
+
+  #sectionContent{
+    margin-top:30px;
+    text-align:center;
+    padding: 20px;
+    background: rgba(0,0,0,0.2);
+    border-radius: 15px;
+    border: 1px solid rgba(212, 175, 55, 0.1);
+  }
+  
+  #sectionContent h3 {
+    color: #d4af37;
+    margin-bottom: 15px;
+    font-size: 22px;
+  }
+  
+  #sectionContent p {
+    margin-bottom: 20px;
+    font-size: 16px;
+    opacity: 0.9;
+  }
+
+  @media(max-width:480px){
+    .card{ padding:25px; }
+    h2{ font-size:24px; }
+    #profileArea p{ font-size:15px; }
+    .btn-section button{ padding:12px 20px; font-size:15px; }
+    .support-icons a{ width:50px; height:50px; font-size:24px; }
+    .support-icons{ gap:20px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="card">
+  <div class="profile-pic">
+    <i class="fa-solid fa-user"></i>
+  </div>
+
+  <h2 id="userName">Profile</h2>
+  <div id="profileArea">Loading...</div>
+
+  <div class="btn-section">
+    <button onclick="showSection('support')"><i class="fa-solid fa-headset"></i> Support</button>
+  </div>
+
+  <div id="sectionContent"></div>
+</div>
+
+<script>
+  // Load profile
+  async function loadProfile(){
+    try{
+      const res = await fetch('/api/profile');
+      if(res.status === 401){ window.location.href = '/login'; return; }
+      const j = await res.json();
+      if(j.status === 'ok'){
+        const p = j.profile;
+        document.getElementById('profileArea').innerHTML = `
+          <p><strong>Name:</strong> ${p.firstName || '-'} ${p.lastName || ''}</p>
+          <p><strong>Email:</strong> ${p.email}</p>
+          <p><strong>Phone:</strong> ${p.phone || '-'}</p>
+        `;
+        document.getElementById('userName').textContent = p.firstName || p.email;
+      } else { document.getElementById('profileArea').innerText = 'Could not load profile'; }
+    } catch(err){
+      console.error(err);
+      document.getElementById('profileArea').innerText = 'Error loading profile';
+    }
+  }
+  loadProfile();
+
+  // Section toggle
+  function showSection(section){
+    const content = document.getElementById('sectionContent');
+    if(section==='support'){
+      content.innerHTML = `
+        <h3>Support</h3>
+        <p>Need help? Contact us via:</p>
+        <div class="support-icons">
+          <a href="https://wa.me/1234567890" target="_blank" title="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
+          <a href="https://facebook.com" target="_blank" title="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+          <a href="https://twitter.com" target="_blank" title="X"><i class="fa-brands fa-x-twitter"></i></a>
+          <a href="mailto:support@zestpay.com" title="Gmail"><i class="fa-solid fa-envelope"></i></a>
+        </div>
+      `;
+    }
+  }
+</script>
+
+</body>
+</html>

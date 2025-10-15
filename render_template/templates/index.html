@@ -1,0 +1,1428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>ZESTPAY - The Future of Digital Finance</title>
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg, #010101, #1a1a1a);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  color: #fff;
+  overflow-x: hidden;
+}
+
+.container {
+  max-width: 400px;
+  width: 90%;
+  position: relative;
+  text-align: center;
+  padding: 20px;
+}
+
+.slide {
+  display: none;
+  animation: fade 0.5s ease-in-out;
+  padding: 20px;
+}
+
+.active { 
+  display: block; 
+}
+
+@keyframes fade { 
+  from { opacity: 0; transform: translateY(10px); } 
+  to { opacity: 1; transform: translateY(0); } 
+}
+
+h2 { 
+  font-size: clamp(20px, 5vw, 24px); 
+  margin: 15px 0 10px; 
+  color: #be850a;
+  font-weight: 600;
+}
+
+p { 
+  font-size: clamp(14px, 3vw, 16px); 
+  margin: 0 0 20px; 
+  color: #ccc;
+  line-height: 1.5;
+}
+
+.feature-list {
+  text-align: left;
+  margin: 15px 0;
+}
+
+.feature-item {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 12px;
+  color: #ccc;
+  font-size: clamp(14px, 3vw, 16px);
+}
+
+.feature-item i {
+  color: #be850a;
+  margin-right: 10px;
+  margin-top: 2px;
+}
+
+.read-more-btn {
+  color: #be850a;
+  background: none;
+  border: none;
+  font-size: 14px;
+  cursor: pointer;
+  margin-top: 5px;
+  display: inline-flex;
+  align-items: center;
+  transition: all 0.3s ease;
+}
+
+.read-more-btn:hover {
+  text-decoration: underline;
+}
+
+.read-more-btn i {
+  margin-left: 5px;
+  transition: transform 0.3s ease;
+}
+
+.read-more-btn.expanded i {
+  transform: rotate(180deg);
+}
+
+.expandable-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.5s ease;
+}
+
+.expandable-content.show {
+  max-height: 500px;
+}
+
+.arrow-btn {
+  margin: 20px auto 0;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  font-size: 24px;
+  background: rgba(0, 0, 0, 0.5);
+  color: #be850a;
+  border: 1px solid #be850a;
+  transition: all 0.3s ease;
+}
+
+.arrow-btn:hover {
+  transform: scale(1.1);
+  background: rgba(190, 133, 10, 0.2);
+}
+
+.final-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-top: 25px;
+}
+
+.btn {
+  padding: 14px 20px;
+  border: none;
+  border-radius: 8px;
+  font-size: clamp(14px, 3vw, 16px);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 500;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  transition: left 0.5s;
+}
+
+.btn:hover::before {
+  left: 100%;
+}
+
+.create-btn { 
+  background: linear-gradient(90deg, #8B6914, #be850a); 
+  color: #fff; 
+  font-weight: bold;
+  box-shadow: 0 4px 15px rgba(190, 133, 10, 0.3);
+}
+
+.create-btn:hover { 
+  background: linear-gradient(90deg, #be850a, #fdb704);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(190, 133, 10, 0.4);
+}
+
+.login-btn, .google-btn {
+  background: rgba(255,255,255,0.1);
+  color: white;
+  border: 1px solid rgba(255,255,255,0.3);
+}
+
+.login-btn:hover, .google-btn:hover {
+  background: rgba(255,255,255,0.2);
+  transform: translateY(-2px);
+}
+
+.google-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  font-weight: bold;
+  background: #4285f4;
+  border: none;
+  color: white;
+  box-shadow: 0 4px 15px rgba(66, 133, 244, 0.3);
+}
+
+.google-btn:hover {
+  background: #3367d6;
+  box-shadow: 0 6px 20px rgba(66, 133, 244, 0.4);
+}
+
+.google-icon {
+  width: 20px;
+  height: 20px;
+  background: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTgiIGhlaWdodD0iMTgiIHZpZXdCb3g9IjAgMCAxOCAxOCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTE3LjY0IDkuMjA0NTVDMTcuNjQgOC41NjYzNiAxNy41ODI3IDcuOTUyNzMgMTcuNDc2NCA3LjM2MzY0SDlWMTAuODQ1NUgxMy44NzM2QzEzLjcyNzMgMTEuOTcgMTMuMDkxIDEyLjkyMzYgMTIuNDc3MyAxMy41NjM2VjE2LjAzODJIMTQuMTk0NUMxNS4zIDE2LjAzODIgMTYuMjI3MyAxNS4yODY0IDE2Ljg3NzMgMTQuMjkxOEgxMy40NzczQzEyLjk5IDE0LjcyMDUgMTIuMjc2NCAxNC45OTczIDExLjQwOTEgMTUuMDg3OVYxNy4yMDQ1SDExLjQwOTFDMTAuMjc2NCAxNy4yMDQ1IDkuMjcyNzMgMTYuNzM2NCA4LjQzNjM2IDE2LjAzODJDNy42IDE1LjM0IDcuMDM2MzYgMTQuMzY4MiA2Ljc2MzY0IDEzLjI0NTVDNi40OTA5MSAxMi4xMjI3IDYuNDcyNzMgMTAuOTcyNyA2LjcwMDA5IDkuODM2MzZDNi45MjczIDguNjk5OTEgNy40OTA5MSA3LjU1MDAwOSA4LjQzNjM2IDYuODU0NTVDOS4yNzI3MyA2LjE1OTA5IDEwLjI3NjQgNS42OTA5MSAxMS40MDkxIDUuNjkwOTFWOC4xODE4OEgxNi44NzczQzE3LjA0NTUgOC4xODE4OCAxNy4yMDQ1IDguMTg5ODIgMTcuMzU5MSA4LjIwNDU1VjExLjc5NTVDMTcuMzU5MSAxMi4xODE4IDE3LjM0MDkgMTIuNTU5MSAxNy4zMDQ1IDEyLjkyNzNIMTMuOTA5MUMxMy44MTgyIDEzLjI4NjQgMTMuNjcyNyAxMy42MjczIDEzLjQ3NzMgMTMuOTM2NEgxNi44NzczQzE2LjU5MDkgMTQuNTM2NCAxNi4xODE4IDE1LjA0NTUgMTUuNjU0NSAxNS40NjM2SDEzLjA0NTVDMTIuODcyNyAxNS42NTQ1IDEyLjY1NDUgMTUuODE4MiAxMi4zOTA5IDE1Ljk0NTVIMTEuNjM2NFYxNy4yMDQ1SDExLjQwOTFWMTUuMDg3OUMxMC41NDE4IDE0Ljk5NzMgOS44MzYzNiAxNC43MjA1IDkuMzQ5MDkgMTQuMjkxOEg1Ljk0OTA5QzUuMzQwOTEgMTUuMjg2NCA2LjI3MjczIDE2LjAzODIgNy40MDk1NSAxNi4wMzgySDkuMTM2NFYxMy41NjM2QzguNTIyNzMgMTIuOTIzNiA3Ljg5MDkxIDExLjk3IDcuNzQwOTEgMTAuODQ1NUgxMS42MzY0VjcuMzYzNjRINy43NjM2NEM3LjY1NzI3IDcuOTUyNzMgNy42IDguNTY2MzYgNy42IDkuMjA0NTVDNy42IDEwLjM0MDkgOC4xNjM2NCAxMS40OTA5IDkuMDAwMDkgMTIuMTg3OUM5LjgzNjM2IDEyLjg4NjQgMTAuODQwOSAxMy4zNTQ1IDExLjk3MzYgMTMuMzU0NVYxMC44NDU1SDE1Ljg0NzNDMTUuNzQwOSAxMS40MzQ1IDE1LjY4IDEyLjA0ODIgMTUuNjggMTIuNjg2NEgxNy42NFoiIGZpbGw9IiM0Mjg1RjQiLz4KPC9zdmc+Cg==') no-repeat center;
+  background-size: contain;
+}
+
+/* Google Sign-In Modal */
+.google-modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  z-index: 1000;
+  justify-content: center;
+  align-items: center;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.modal-content {
+  background: #1a1a1a;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 420px;
+  max-height: 85vh;
+  overflow-y: auto;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(190, 133, 10, 0.3);
+  animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+  from { transform: translateY(50px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.modal-header {
+  padding: 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.modal-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #be850a;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 24px;
+  cursor: pointer;
+  padding: 0;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: background 0.3s;
+}
+
+.close-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.modal-body {
+  padding: 20px;
+}
+
+/* Account List */
+.account-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.account-item {
+  display: flex;
+  align-items: center;
+  padding: 15px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.05);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 1px solid transparent;
+  position: relative;
+}
+
+.account-item:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(190, 133, 10, 0.3);
+  transform: translateY(-2px);
+}
+
+.account-item.registered {
+  border: 1px solid #4caf50;
+  background: rgba(76, 175, 80, 0.1);
+}
+
+.account-item.not-registered {
+  border: 1px solid #ff9800;
+  background: rgba(255, 152, 0, 0.1);
+}
+
+.account-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: #4285f4;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 18px;
+  margin-right: 15px;
+  flex-shrink: 0;
+}
+
+.account-avatar img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.account-info {
+  flex: 1;
+  text-align: left;
+  min-width: 0;
+}
+
+.account-name {
+  font-weight: 500;
+  font-size: 16px;
+  margin-bottom: 3px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.account-email {
+  font-size: 14px;
+  color: #aaa;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.account-status {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.account-status.registered {
+  background: #4caf50;
+  color: white;
+}
+
+.account-status.not-registered {
+  background: #ff9800;
+  color: white;
+}
+
+.account-source {
+  font-size: 12px;
+  color: #666;
+  margin-top: 2px;
+}
+
+/* Loading States */
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid rgba(255, 255, 255, 0.1);
+  border-top: 4px solid #be850a;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.loading-text {
+  margin-top: 15px;
+  color: #be850a;
+  font-size: 14px;
+}
+
+/* Auth Flow */
+.auth-flow {
+  display: none;
+  padding: 20px;
+  text-align: center;
+}
+
+.auth-flow.active {
+  display: block;
+}
+
+.auth-icon {
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 20px;
+  background: #4285f4;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 36px;
+  color: white;
+}
+
+.auth-title {
+  font-size: 22px;
+  color: #be850a;
+  margin-bottom: 10px;
+}
+
+.auth-subtitle {
+  font-size: 16px;
+  color: #ccc;
+  margin-bottom: 25px;
+}
+
+.auth-email {
+  font-size: 18px;
+  color: #fff;
+  margin-bottom: 20px;
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  word-break: break-all;
+}
+
+.auth-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.auth-btn {
+  padding: 14px;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.auth-btn.primary {
+  background: #4285f4;
+  color: white;
+}
+
+.auth-btn.primary:hover {
+  background: #3367d6;
+  transform: translateY(-2px);
+}
+
+.auth-btn.secondary {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.auth-btn.secondary:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* Add Account Section */
+.add-account-section {
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.add-account-btn {
+  width: 100%;
+  padding: 12px;
+  border: 1px dashed rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.05);
+  color: #be850a;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.add-account-btn:hover {
+  background: rgba(190, 133, 10, 0.1);
+  border-color: #be850a;
+}
+
+/* Error/Success Messages */
+.message {
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 15px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.message.success {
+  background: rgba(76, 175, 80, 0.2);
+  border: 1px solid #4caf50;
+  color: #4caf50;
+}
+
+.message.error {
+  background: rgba(244, 67, 54, 0.2);
+  border: 1px solid #f44336;
+  color: #f44336;
+}
+
+.message.info {
+  background: rgba(33, 150, 243, 0.2);
+  border: 1px solid #2196f3;
+  color: #2196f3;
+}
+
+/* Progress Indicator */
+.progress-dots {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 20px;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  transition: all 0.3s ease;
+}
+
+.dot.active {
+  background: #be850a;
+  width: 24px;
+  border-radius: 4px;
+}
+
+/* Responsive Design */
+@media (max-width: 480px) {
+  .container {
+    width: 95%;
+    padding: 15px;
+  }
+  
+  .slide {
+    padding: 15px;
+  }
+  
+  h2 {
+    margin: 10px 0 8px;
+  }
+  
+  p {
+    margin-bottom: 15px;
+  }
+  
+  .arrow-btn {
+    width: 50px;
+    height: 50px;
+    font-size: 20px;
+  }
+  
+  .final-buttons {
+    gap: 12px;
+    margin-top: 20px;
+  }
+  
+  .btn {
+    padding: 12px 16px;
+  }
+  
+  .modal-content {
+    width: 95%;
+  }
+  
+  .modal-header, .modal-body {
+    padding: 15px;
+  }
+  
+  .account-avatar {
+    width: 40px;
+    height: 40px;
+    font-size: 16px;
+  }
+  
+  .account-name {
+    font-size: 15px;
+  }
+  
+  .account-email {
+    font-size: 13px;
+  }
+}
+
+@media (max-height: 600px) {
+  .modal-content {
+    max-height: 95vh;
+  }
+  
+  .auth-icon {
+    width: 60px;
+    height: 60px;
+    font-size: 28px;
+  }
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+  <!-- Progress Dots -->
+  <div class="progress-dots">
+    <div class="dot active"></div>
+    <div class="dot"></div>
+    <div class="dot"></div>
+    <div class="dot"></div>
+    <div class="dot"></div>
+    <div class="dot"></div>
+  </div>
+  
+  <!-- Slides -->
+  <div class="slide active">
+    <h2>Receive crypto deposits</h2>
+    <p>Zestpay allows you to receive crypto deposits bypassing the hurdles of fiat payment delays.</p>
+    <button class="read-more-btn" onclick="toggleReadMore(this)">
+      Read more <i class="fa-solid fa-chevron-down"></i>
+    </button>
+    <div class="expandable-content">
+      <div class="feature-list">
+        <div class="feature-item">
+          <i class="fa-solid fa-check-circle"></i>
+          <span>Support for 50+ cryptocurrencies including Bitcoin, Ethereum, and stablecoins</span>
+        </div>
+        <div class="feature-item">
+          <i class="fa-solid fa-check-circle"></i>
+          <span>Instant deposit notifications via SMS, email, and in-app alerts</span>
+        </div>
+        <div class="feature-item">
+          <i class="fa-solid fa-check-circle"></i>
+          <span>Unique wallet addresses for each transaction to enhance privacy</span>
+        </div>
+        <div class="feature-item">
+          <i class="fa-solid fa-check-circle"></i>
+          <span>Zero deposit fees for all supported cryptocurrencies</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="slide">
+    <h2>Automatic crypto to fiat conversions</h2>
+    <p>Zestpay automatically converts crypto deposits to your native currency.</p>
+    <button class="read-more-btn" onclick="toggleReadMore(this)">
+      Read more <i class="fa-solid fa-chevron-down"></i>
+    </button>
+    <div class="expandable-content">
+      <div class="feature-list">
+        <div class="feature-item">
+          <i class="fa-solid fa-check-circle"></i>
+          <span>Real-time conversion at competitive market rates with minimal spread</span>
+        </div>
+        <div class="feature-item">
+          <i class="fa-solid fa-check-circle"></i>
+          <span>Support for 150+ fiat currencies including USD, EUR, GBP, and local African currencies</span>
+        </div>
+        <div class="feature-item">
+          <i class="fa-solid fa-check-circle"></i>
+          <span>Customizable conversion thresholds and auto-withdrawal settings</span>
+        </div>
+        <div class="feature-item">
+          <i class="fa-solid fa-check-circle"></i>
+          <span>Transparent fee structure with no hidden charges</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="slide">
+    <h2>Fast and seamless transactions</h2>
+    <p>Make instant bank transfers, buy airtime, and pay bills.</p>
+    <button class="read-more-btn" onclick="toggleReadMore(this)">
+      Read more <i class="fa-solid fa-chevron-down"></i>
+    </button>
+    <div class="expandable-content">
+      <div class="feature-list">
+        <div class="feature-item">
+          <i class="fa-solid fa-check-circle"></i>
+          <span>Instant bank transfers to over 5,000 banks across 30+ countries</span>
+        </div>
+        <div class="feature-item">
+          <i class="fa-solid fa-check-circle"></i>
+          <span>Prepaid airtime for all major mobile networks with instant delivery</span>
+        </div>
+        <div class="feature-item">
+          <i class="fa-solid fa-check-circle"></i>
+          <span>Bill payments for utilities, internet, subscriptions, and more</span>
+        </div>
+        <div class="feature-item">
+          <i class="fa-solid fa-check-circle"></i>
+          <span>QR code payments for in-person transactions</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="slide">
+    <h2>Bank-level security</h2>
+    <p>Your funds and data are protected with industry-leading security measures.</p>
+    <button class="read-more-btn" onclick="toggleReadMore(this)">
+      Read more <i class="fa-solid fa-chevron-down"></i>
+    </button>
+    <div class="expandable-content">
+      <div class="feature-list">
+        <div class="feature-item">
+          <i class="fa-solid fa-check-circle"></i>
+          <span>Multi-factor authentication with biometric options</span>
+        </div>
+        <div class="feature-item">
+          <i class="fa-solid fa-check-circle"></i>
+          <span>End-to-end encryption for all transactions and communications</span>
+        </div>
+        <div class="feature-item">
+          <i class="fa-solid fa-check-circle"></i>
+          <span>Cold storage for the majority of crypto assets</span>
+        </div>
+        <div class="feature-item">
+          <i class="fa-solid fa-check-circle"></i>
+          <span>Regular security audits and compliance with international standards</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="slide">
+    <h2>Global accessibility</h2>
+    <p>Access financial services regardless of your location or banking status.</p>
+    <button class="read-more-btn" onclick="toggleReadMore(this)">
+      Read more <i class="fa-solid fa-chevron-down"></i>
+    </button>
+    <div class="expandable-content">
+      <div class="feature-list">
+        <div class="feature-item">
+          <i class="fa-solid fa-check-circle"></i>
+          <span>Available in 120+ countries with localized experiences</span>
+        </div>
+        <div class="feature-item">
+          <i class="fa-solid fa-check-circle"></i>
+          <span>Support for unbanked and underbanked populations</span>
+        </div>
+        <div class="feature-item">
+          <i class="fa-solid fa-check-circle"></i>
+          <span>Multi-language support with 15+ languages</span>
+        </div>
+        <div class="feature-item">
+          <i class="fa-solid fa-check-circle"></i>
+          <span>Offline transaction capabilities for areas with limited connectivity</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="slide final-slide">
+    <h2>WELCOME TO ZESTPAY</h2>
+    <p>Join thousands of users who are already experiencing the future of digital finance.</p>
+    <div class="final-buttons">
+      <button class="btn create-btn" data-link="/register">Create Account</button>
+      <button class="btn login-btn" data-link="/login">Login</button>
+      <button class="btn login-btn" data-link="/forgot">Forgot Password</button>
+      <button class="btn google-btn" id="googleSignInBtn">
+        <div class="google-icon"></div>
+        Sign in with Google
+      </button>
+    </div>
+  </div>
+
+  <!-- Arrow navigation -->
+  <div class="arrow-btn" id="nextBtn">➜</div>
+</div>
+
+<!-- Google Sign-In Modal -->
+<div class="google-modal" id="googleModal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <div class="modal-title">Choose an account</div>
+      <button class="close-btn" id="closeModal">&times;</button>
+    </div>
+    <div class="modal-body">
+      <!-- Loading State -->
+      <div class="loading-container" id="loadingState">
+        <div class="spinner"></div>
+        <div class="loading-text">Finding your Google accounts...</div>
+      </div>
+      
+      <!-- Account List -->
+      <div class="account-list" id="accountList" style="display: none;"></div>
+      
+      <!-- Auth Flow -->
+      <div class="auth-flow" id="authFlow">
+        <div class="auth-icon" id="authIcon">
+          <i class="fa-solid fa-user"></i>
+        </div>
+        <div class="auth-title" id="authTitle"></div>
+        <div class="auth-subtitle" id="authSubtitle"></div>
+        <div class="auth-email" id="authEmail"></div>
+        <div class="auth-buttons" id="authButtons"></div>
+      </div>
+      
+      <!-- Add Account Section -->
+      <div class="add-account-section">
+        <button class="add-account-btn" id="addAccountBtn">
+          <i class="fa-solid fa-plus"></i>
+          Use another account
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Font Awesome for icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<!-- Google Identity Services -->
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+
+<script>
+const slides = document.querySelectorAll('.slide');
+const nextBtn = document.getElementById('nextBtn');
+const dots = document.querySelectorAll('.dot');
+const googleSignInBtn = document.getElementById('googleSignInBtn');
+const googleModal = document.getElementById('googleModal');
+const closeModal = document.getElementById('closeModal');
+const loadingState = document.getElementById('loadingState');
+const accountList = document.getElementById('accountList');
+const authFlow = document.getElementById('authFlow');
+const authIcon = document.getElementById('authIcon');
+const authTitle = document.getElementById('authTitle');
+const authSubtitle = document.getElementById('authSubtitle');
+const authEmail = document.getElementById('authEmail');
+const authButtons = document.getElementById('authButtons');
+const addAccountBtn = document.getElementById('addAccountBtn');
+const finalButtons = document.querySelectorAll('.final-buttons .btn:not(#googleSignInBtn)');
+
+let currentSlide = 0;
+let googleAccounts = [];
+let selectedAccount = null;
+
+// Toggle read more content
+function toggleReadMore(button) {
+  const expandableContent = button.nextElementSibling;
+  const isExpanded = expandableContent.classList.contains('show');
+  
+  if (isExpanded) {
+    expandableContent.classList.remove('show');
+    button.innerHTML = 'Read more <i class="fa-solid fa-chevron-down"></i>';
+    button.classList.remove('expanded');
+  } else {
+    expandableContent.classList.add('show');
+    button.innerHTML = 'Read less <i class="fa-solid fa-chevron-up"></i>';
+    button.classList.add('expanded');
+  }
+}
+
+// Update progress dots
+function updateDots() {
+  dots.forEach((dot, index) => {
+    if (index === currentSlide) {
+      dot.classList.add('active');
+    } else {
+      dot.classList.remove('active');
+    }
+  });
+}
+
+// Fetch all Google accounts from device
+async function fetchGoogleAccounts() {
+  const accounts = [];
+  
+  // 1. Get accounts from Credential Management API
+  if ('credentials' in navigator) {
+    try {
+      // Get all federated credentials
+      const creds = await navigator.credentials.get({
+        password: true,
+        federated: {
+          providers: [
+            new URL('https://accounts.google.com'),
+            new URL('https://accounts.google.com/gsi/select')
+          ]
+        }
+      });
+      
+      if (creds) {
+        accounts.push({
+          id: creds.id,
+          name: creds.name || creds.id.split('@')[0],
+          email: creds.id,
+          picture: creds.picture || null,
+          source: 'browser'
+        });
+      }
+    } catch (error) {
+      console.log('No browser credentials found');
+    }
+  }
+  
+  // 2. Get accounts from Google Identity Services
+  if (typeof google !== 'undefined' && google.accounts) {
+    try {
+      // Initialize Google Sign-In
+      google.accounts.id.initialize({
+        client_id: 'YOUR_CLIENT_ID.apps.googleusercontent.com', // Replace with your client ID
+        callback: (response) => {
+          // Handle the response
+          const payload = JSON.parse(atob(response.credential.split('.')[1]));
+          const account = {
+            id: payload.sub,
+            name: payload.name,
+            email: payload.email,
+            picture: payload.picture,
+            source: 'google'
+          };
+          
+          // Check if account already exists
+          if (!accounts.find(a => a.email === account.email)) {
+            accounts.push(account);
+          }
+        }
+      });
+    } catch (error) {
+      console.log('Google Identity Services not available');
+    }
+  }
+  
+  // 3. Get accounts from localStorage
+  const storedAccounts = localStorage.getItem('zestpay_google_accounts');
+  if (storedAccounts) {
+    const parsed = JSON.parse(storedAccounts);
+    parsed.forEach(account => {
+      if (!accounts.find(a => a.email === account.email)) {
+        accounts.push(account);
+      }
+    });
+  }
+  
+  // 4. Get accounts from session storage
+  const sessionAccounts = sessionStorage.getItem('zestpay_session_accounts');
+  if (sessionAccounts) {
+    const parsed = JSON.parse(sessionAccounts);
+    parsed.forEach(account => {
+      if (!accounts.find(a => a.email === account.email)) {
+        accounts.push(account);
+      }
+    });
+  }
+  
+  // 5. Try to detect from browser autofill
+  try {
+    const tempInput = document.createElement('input');
+    tempInput.type = 'email';
+    tempInput.autocomplete = 'email';
+    tempInput.style.position = 'absolute';
+    tempInput.style.left = '-9999px';
+    document.body.appendChild(tempInput);
+    tempInput.focus();
+    
+    // Wait for autofill
+    await new Promise(resolve => setTimeout(resolve, 500));
+    
+    if (tempInput.value && tempInput.value.includes('@')) {
+      const email = tempInput.value;
+      if (!accounts.find(a => a.email === email)) {
+        accounts.push({
+          id: email,
+          name: email.split('@')[0],
+          email: email,
+          picture: null,
+          source: 'autofill'
+        });
+      }
+    }
+    
+    document.body.removeChild(tempInput);
+  } catch (error) {
+    console.log('Autofill detection failed');
+  }
+  
+  return accounts;
+}
+
+// Check if email is registered in Python backend
+async function checkEmailRegistration(email) {
+  try {
+    const response = await fetch('/api/auth/check-email', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ email: email })
+    });
+    
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error checking email:', error);
+    return { registered: false, error: true };
+  }
+}
+
+// Render account list with registration status
+async function renderAccountList() {
+  accountList.innerHTML = '';
+  
+  if (googleAccounts.length === 0) {
+    accountList.innerHTML = `
+      <div style="text-align: center; padding: 40px 20px; color: #666;">
+        <i class="fa-solid fa-user-slash" style="font-size: 48px; margin-bottom: 15px; display: block;"></i>
+        <p>No Google accounts found</p>
+        <p style="font-size: 12px; margin-top: 10px;">Try adding an account below</p>
+      </div>
+    `;
+    return;
+  }
+  
+  // Check registration status for each account
+  for (const account of googleAccounts) {
+    const status = await checkEmailRegistration(account.email);
+    account.registered = status.registered;
+    
+    const accountItem = document.createElement('div');
+    accountItem.className = `account-item ${status.registered ? 'registered' : 'not-registered'}`;
+    
+    // Avatar
+    const avatar = document.createElement('div');
+    avatar.className = 'account-avatar';
+    if (account.picture) {
+      avatar.innerHTML = `<img src="${account.picture}" alt="${account.name}">`;
+    } else {
+      avatar.textContent = account.name.charAt(0).toUpperCase();
+    }
+    
+    // Info
+    const info = document.createElement('div');
+    info.className = 'account-info';
+    
+    const name = document.createElement('div');
+    name.className = 'account-name';
+    name.textContent = account.name;
+    
+    const email = document.createElement('div');
+    email.className = 'account-email';
+    email.textContent = account.email;
+    
+    const source = document.createElement('div');
+    source.className = 'account-source';
+    source.textContent = `Source: ${account.source}`;
+    
+    info.appendChild(name);
+    info.appendChild(email);
+    info.appendChild(source);
+    
+    // Status badge
+    const statusBadge = document.createElement('div');
+    statusBadge.className = `account-status ${status.registered ? 'registered' : 'not-registered'}`;
+    statusBadge.textContent = status.registered ? '✓ Registered' : 'New';
+    
+    accountItem.appendChild(avatar);
+    accountItem.appendChild(info);
+    accountItem.appendChild(statusBadge);
+    
+    accountItem.addEventListener('click', () => {
+      handleAccountSelection(account, status);
+    });
+    
+    accountList.appendChild(accountItem);
+  }
+}
+
+// Handle account selection
+function handleAccountSelection(account, status) {
+  selectedAccount = account;
+  
+  // Hide account list
+  accountList.style.display = 'none';
+  addAccountBtn.style.display = 'none';
+  
+  // Show auth flow
+  authFlow.classList.add('active');
+  
+  if (status.registered) {
+    // Login flow
+    authIcon.innerHTML = '<i class="fa-solid fa-sign-in-alt"></i>';
+    authTitle.textContent = 'Welcome Back!';
+    authSubtitle.textContent = 'Sign in to continue to ZestPay';
+    authEmail.textContent = account.email;
+    
+    authButtons.innerHTML = `
+      <button class="auth-btn primary" onclick="proceedWithLogin()">
+        <i class="fa-solid fa-sign-in-alt"></i>
+        Continue with Google
+      </button>
+      <button class="auth-btn secondary" onclick="backToAccountList()">
+        <i class="fa-solid fa-arrow-left"></i>
+        Choose another account
+      </button>
+    `;
+  } else {
+    // Registration flow
+    authIcon.innerHTML = '<i class="fa-solid fa-user-plus"></i>';
+    authTitle.textContent = 'Create Account';
+    authSubtitle.textContent = 'Join ZestPay with your Google account';
+    authEmail.textContent = account.email;
+    
+    authButtons.innerHTML = `
+      <button class="auth-btn primary" onclick="proceedWithRegistration()">
+        <i class="fa-solid fa-user-plus"></i>
+        Create Account with Google
+      </button>
+      <button class="auth-btn secondary" onclick="backToAccountList()">
+        <i class="fa-solid fa-arrow-left"></i>
+        Choose another account
+      </button>
+    `;
+  }
+}
+
+// Back to account list
+function backToAccountList() {
+  authFlow.classList.remove('active');
+  accountList.style.display = 'flex';
+  addAccountBtn.style.display = 'block';
+}
+
+// Proceed with login
+async function proceedWithLogin() {
+  if (!selectedAccount) return;
+  
+  // Show loading
+  authFlow.innerHTML = `
+    <div class="loading-container">
+      <div class="spinner"></div>
+      <div class="loading-text">Signing you in...</div>
+    </div>
+  `;
+  
+  try {
+    const response = await fetch('/api/auth/google-login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        email: selectedAccount.email,
+        name: selectedAccount.name,
+        picture: selectedAccount.picture,
+        google_id: selectedAccount.id
+      })
+    });
+    
+    const data = await response.json();
+    
+    if (data.success) {
+      // Store user session
+      localStorage.setItem('zestpay_user', JSON.stringify({
+        id: data.user.id,
+        email: data.user.email,
+        name: data.user.name,
+        picture: data.user.picture,
+        token: data.token,
+        loginTime: new Date().toISOString()
+      }));
+      
+      // Store account for future
+      if (!googleAccounts.find(a => a.email === selectedAccount.email)) {
+        googleAccounts.push(selectedAccount);
+        localStorage.setItem('zestpay_google_accounts', JSON.stringify(googleAccounts));
+      }
+      
+      // Redirect to dashboard
+      window.location.href = '/dashboard';
+    } else {
+      // Show error
+      authFlow.innerHTML = `
+        <div class="message error">
+          <i class="fa-solid fa-exclamation-circle"></i>
+          <span>${data.message || 'Login failed'}</span>
+        </div>
+        <button class="auth-btn secondary" onclick="backToAccountList()">
+          <i class="fa-solid fa-arrow-left"></i>
+          Try again
+        </button>
+      `;
+    }
+  } catch (error) {
+    console.error('Login error:', error);
+    authFlow.innerHTML = `
+      <div class="message error">
+        <i class="fa-solid fa-exclamation-circle"></i>
+        <span>Connection error. Please try again.</span>
+      </div>
+      <button class="auth-btn secondary" onclick="backToAccountList()">
+        <i class="fa-solid fa-arrow-left"></i>
+        Try again
+      </button>
+    `;
+  }
+}
+
+// Proceed with registration
+async function proceedWithRegistration() {
+  if (!selectedAccount) return;
+  
+  // Show loading
+  authFlow.innerHTML = `
+    <div class="loading-container">
+      <div class="spinner"></div>
+      <div class="loading-text">Creating your account...</div>
+    </div>
+  `;
+  
+  try {
+    const response = await fetch('/api/auth/google-register', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        email: selectedAccount.email,
+        name: selectedAccount.name,
+        picture: selectedAccount.picture,
+        google_id: selectedAccount.id
+      })
+    });
+    
+    const data = await response.json();
+    
+    if (data.success) {
+      // Store user session
+      localStorage.setItem('zestpay_user', JSON.stringify({
+        id: data.user.id,
+        email: data.user.email,
+        name: data.user.name,
+        picture: data.user.picture,
+        token: data.token,
+        loginTime: new Date().toISOString()
+      }));
+      
+      // Store account for future
+      if (!googleAccounts.find(a => a.email === selectedAccount.email)) {
+        googleAccounts.push(selectedAccount);
+        localStorage.setItem('zestpay_google_accounts', JSON.stringify(googleAccounts));
+      }
+      
+      // Redirect to dashboard
+      window.location.href = '/dashboard';
+    } else {
+      // Show error
+      authFlow.innerHTML = `
+        <div class="message error">
+          <i class="fa-solid fa-exclamation-circle"></i>
+          <span>${data.message || 'Registration failed'}</span>
+        </div>
+        <button class="auth-btn secondary" onclick="backToAccountList()">
+          <i class="fa-solid fa-arrow-left"></i>
+          Try again
+        </button>
+      `;
+    }
+  } catch (error) {
+    console.error('Registration error:', error);
+    authFlow.innerHTML = `
+      <div class="message error">
+        <i class="fa-solid fa-exclamation-circle"></i>
+        <span>Connection error. Please try again.</span>
+      </div>
+      <button class="auth-btn secondary" onclick="backToAccountList()">
+        <i class="fa-solid fa-arrow-left"></i>
+        Try again
+      </button>
+    `;
+  }
+}
+
+// Add new account
+function addNewAccount() {
+  const email = prompt('Enter your Google email:');
+  if (email && email.includes('@')) {
+    const newAccount = {
+      id: email,
+      name: email.split('@')[0],
+      email: email,
+      picture: null,
+      source: 'manual'
+    };
+    
+    googleAccounts.push(newAccount);
+    localStorage.setItem('zestpay_google_accounts', JSON.stringify(googleAccounts));
+    renderAccountList();
+  }
+}
+
+// Handle Google Sign-In button click
+async function handleGoogleSignIn() {
+  googleModal.style.display = 'flex';
+  loadingState.style.display = 'flex';
+  
+  try {
+    // Fetch all Google accounts
+    googleAccounts = await fetchGoogleAccounts();
+    
+    // Hide loading
+    loadingState.style.display = 'none';
+    
+    // Show account list
+    accountList.style.display = 'flex';
+    renderAccountList();
+  } catch (error) {
+    console.error('Error fetching accounts:', error);
+    loadingState.style.display = 'none';
+    
+    // Show error message
+    accountList.innerHTML = `
+      <div class="message error">
+        <i class="fa-solid fa-exclamation-circle"></i>
+        <span>Unable to fetch Google accounts</span>
+      </div>
+    `;
+    accountList.style.display = 'block';
+  }
+}
+
+// Event listeners
+nextBtn.addEventListener('click', () => {
+  slides[currentSlide].classList.remove('active');
+  currentSlide++;
+  
+  if (currentSlide < slides.length) {
+    slides[currentSlide].classList.add('active');
+    updateDots();
+  }
+  
+  if (currentSlide === slides.length - 1) {
+    nextBtn.style.display = 'none';
+  }
+});
+
+googleSignInBtn.addEventListener('click', handleGoogleSignIn);
+
+closeModal.addEventListener('click', () => {
+  googleModal.style.display = 'none';
+});
+
+addAccountBtn.addEventListener('click', addNewAccount);
+
+finalButtons.forEach(btn => {
+  btn.addEventListener('click', () => {
+    const link = btn.getAttribute('data-link');
+    window.location.href = link;
+  });
+});
+
+// Close modal when clicking outside
+window.addEventListener('click', (e) => {
+  if (e.target === googleModal) {
+    googleModal.style.display = 'none';
+  }
+});
+
+// Initialize
+updateDots();
+</script>
+
+</body>
+</html>
